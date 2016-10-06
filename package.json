@@ -1,0 +1,27 @@
+{
+  "name": "DeepIntoBlockchain",
+  "description": "Blockchain Multiplayer Game",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "express": "3.x",
+    "socket.io": "0.9",
+    "sqlite3": "^3.1.4"
+  },
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "node index.js",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aliceclv/deepintoblockchain-game"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aliceclv/deepintoblockchain-game/issues"
+  },
+  "homepage": "https://github.com/aliceclv/deepintoblockchain-game"
+}

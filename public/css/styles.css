@@ -1,0 +1,37 @@
+/* Color chart
+Creamy white: #FFF6E5
+Dark orange: #E74C3C
+Dark grey: #3E454C
+Dark blue: #2185C5
+Light blue: #7ECEFD */
+
+.introScreenWrapper {
+  background-color: #3E454C;
+  color: #FFF6E5;
+  height: 100vh;
+  text-align: center;
+}
+
+.buttons button {
+  text-decoration: none;
+  font-size: 32px;
+  background-color: inherit;
+  border: 2px solid;
+  padding: 10px;
+  border-radius: 5px;
+  width: 123px;
+}
+.buttons button:hover {
+  text-decoration: none;
+  background-color: rgba(255, 246, 229, 0.4);
+}
+.buttons button:focus {
+  outline: 0;
+}
+
+.joinGameWrapper {
+  background-color: #E74C3C;
+  color: #FFF6E5;
+  height: 100vh;
+  text-align: center;
+}
