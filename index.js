@@ -13,7 +13,7 @@ var fs = require('fs');
 var bc = require('./bcgame');
 
 // Creating server if not exists
-
+// TODO: Something is wrong here with the DB
 var file ="mydb.db";
 var exists = fs.existsSync(file);
 
@@ -24,12 +24,16 @@ if(!exists) {
 
 var sqlite3 = require("sqlite3").verbose();
 var db = new sqlite3.Database(file);
+console.log(db);
 
 // TODO: what's my db schema?
+// TODO: Not working!
 db.serialize(function() {
-  if(!exists) {
-    db.run("CREATE TABLE player (player_name TEXT, player_win INT)");
-  }
+  console.log(!exists);
+  // if(!exists) {
+  //   db.run("CREATE TABLE player (player_name TEXT, player_win INT)");
+  // }
+  db.run("CREATE TABLE player (player_name TEXT, player_win INT)");
 });
 
 
@@ -43,7 +47,7 @@ app.configure(function() {
 });
 
 // Create a Node.js based http server on port 8080
-var server = require('http').createServer(app).listen(process.env.PORT || 4000);
+var server = require('http').createServer(app).listen(process.env.PORT || 8080);
 
 // Create a Socket.IO server and attach it to the http server
 var io = require('socket.io').listen(server);
@@ -54,7 +58,7 @@ io.set('log level',1);
 
 // Listen for Socket.IO Connections. Once connected, start the game logic.
 io.sockets.on('connection', function (socket) {
-    //console.log('client connected');
+    console.log('Client connected');
     // agx.initGame(io, socket, db);
     bc.initGame(io, socket, db);
 });

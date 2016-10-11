@@ -12,14 +12,17 @@ Light blue: #7ECEFD */
   text-align: center;
 }
 
+.buttons {
+  margin: 2%;
+}
+
 .buttons button {
   text-decoration: none;
   font-size: 32px;
   background-color: inherit;
   border: 2px solid;
-  padding: 10px;
+  padding: 2%;
   border-radius: 5px;
-  width: 123px;
 }
 
 .buttons button:hover {
@@ -50,4 +53,11 @@ Light blue: #7ECEFD */
 
 .info input:focus {
   outline: 0;
+}
+
+.createGameWrapper {
+  background-color: #2185C5;
+  color: #FFF6E5;
+  height: 100vh;
+  text-align: center;
 }

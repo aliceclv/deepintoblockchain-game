@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
     <link href="css/styles.css" rel="stylesheet">
-    <link href="css/animation.css" rel="stylesheet">
 </head>
 
 <body>
@@ -19,6 +18,7 @@
     </div>
 
     <!-- Main Title Screen that appears when the page loads for the first time -->
+    <!-- We could also have predefined rooms and when the maximum amount of player is reached, then the game starts -->
     <script id="intro-screen-template" type="text/template">
       <div class="introScreenWrapper">
         <div class="container">
@@ -29,8 +29,15 @@
           </div>
           <div class="col-xs-12">
             <div class="buttons">
+              <button id="btnCreateGame">
+                Create a new game
+              </button>
+            </div>
+          </div>
+          <div class="col-xs-12">
+            <div class="buttons">
               <button id='btnJoinGame'>
-                Join
+                Join a room
               </button>
             </div>
           </div>
@@ -38,20 +45,19 @@
       </div>
     </script>
 
-
-
-    // <!-- This screen appears when a user clicks "CREATE" on the Title Screen -->
+    <!-- This screen appears when a user clicks "CREATE" on the Title Screen -->
     <script id="create-game-template" type="text/template">
-    //     <div class="createGameWrapper">
+      <div class="createGameWrapper">
+        <div class='container'>
+          <div class="info">Open this site on your mobile device:</div>
+          <div id="gameURL" class="infoBig">Error!</div>
 
-    //         <div class="info">Open this site on your mobile device:</div>
-    //         <div id="gameURL" class="infoBig">Error!</div>
+          <div class="info">Then click <strong>JOIN</strong> and <br/> enter the following Game ID:</div>
+          <div id="spanNewGameCode" class="gameId">Error!</div>
 
-    //         <div class="info">Then click <strong>JOIN</strong> and <br/> enter the following Game ID:</div>
-    //         <div id="spanNewGameCode" class="gameId">Error!</div>
-
-    //         <div id="playersWaiting"></div>
-    //     </div>
+          <div id="playersWaiting"></div>
+        </div>
+      </div>
     </script>
 
     <div class="col-xs-12">
@@ -86,8 +92,8 @@
       </div>
     </script>
 
-    // <!-- This is the 'Host' screen. It displays the word for each player to match -->
-    // <script id="host-game-template" type="text/template">
+    <!-- This is the 'Host' screen. It displays the word for each player to match -->
+    <script id="host-game-template" type="text/template">
     //     <div id="wordArea">
     //         <div id="hostWord">5</div>
     //     </div>
@@ -99,13 +105,13 @@
     //             <span class="playerName">Player 2</span><span class="score">0</span>
     //         </div>
     //     </div>
-    // </script>
+    </script>
 
 
-    // <script id="leaderboard-template" type="text/template">
+    <script id="leaderboard-template" type="text/template">
     //     <div id="banner">Leader Board</div>
     //     <hr>
-    // </script>
+    </script>
     <!-- JavaScript Libraries -->
 
     <!-- jQuery! -->
