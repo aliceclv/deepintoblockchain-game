@@ -31,7 +31,7 @@ jQuery(function($){
         // TODO: Room needs to be created before? || We follow the exact same scheme
         IO.socket.on('newGameCreated', IO.onNewGameCreated );
         IO.socket.on('playerJoinedRoom', IO.playerJoinedRoom );
-        // IO.socket.on('beginNewGame', IO.beginNewGame );
+        IO.socket.on('beginNewGame', IO.beginNewGame );
         // IO.socket.on('newWordData', IO.onNewWordData);
         // IO.socket.on('hostCheckAnswer', IO.hostCheckAnswer);
         // IO.socket.on('gameOver', IO.gameOver);
@@ -69,6 +69,16 @@ jQuery(function($){
         // So on the 'host' browser window, the App.Host.updateWiatingScreen function is called.
         // And on the player's browser, App.Player.updateWaitingScreen is called.
         App[App.myRole].updateWaitingScreen(data);
+    },
+
+    /**
+     * Both players have joined the game.
+     * @param data
+     */
+    beginNewGame : function(data) {
+      // TODO: do it for player as well
+      console.log("DONT FORGET TO DO IT FOR PLAYER");
+      App[App.myRole].gameCountdown(data);
     }
   };
 
@@ -123,6 +133,7 @@ jQuery(function($){
       App.$templateIntroScreen = $('#intro-screen-template').html();
       App.$templateNewGame = $('#create-game-template').html();
       App.$templateJoinGame = $('#join-game-template').html();
+      App.$hostGame = $('#host-game-template').html();
     },
 
     bindEvents: function() {
@@ -219,14 +230,13 @@ jQuery(function($){
        */
       updateWaitingScreen: function(data) {
         // If this is a restarted game, show the screen.
+        console.log(App.Host.isNewGame);
         if ( App.Host.isNewGame ) {
             App.Host.displayNewGameScreen();
         }
         // TODO: not working
         // Update host screen
-        $('#playersWaiting')
-            .append('<p/>')
-            .text('Player ' + data.playerName + ' joined the game.');
+        $('#playersWaiting').append('<p>Player ' + data.playerName + ' joined the game.</p>');
 
         // Store the new player's data on the Host.
         App.Host.players.push(data);
@@ -237,11 +247,40 @@ jQuery(function($){
         // TODO: this is where I need to change for 4
         // If two players have joined, start the game!
         if (App.Host.numPlayersInRoom === 4) {
-            // console.log('Room is full. Almost ready!');
+            console.log('Room is full. Almost ready!');
 
             // Let the server know that two players are present.
-            IO.socket.emit('hostRoomFull',App.gameId);
+            IO.socket.emit('hostRoomFull', App.gameId);
         }
+      },
+
+      /**
+       * Show the countdown screen
+       */
+      gameCountdown : function() {
+        // TODO
+        // Prepare the game screen with new HTML
+        App.$gameArea.html(App.$hostGame);
+        // App.doTextFit('#hostWord');
+
+        // Begin the on-screen countdown timer
+        var $secondsLeft = $('#hostBlock');
+        App.countDown( $secondsLeft, 5, function(){
+            IO.socket.emit('hostCountdownFinished', App.gameId);
+        });
+
+        // // Display the players' names on screen
+        // $('#player1Score')
+        //     .find('.playerName')
+        //     .html(App.Host.players[0].playerName);
+
+        // $('#player2Score')
+        //     .find('.playerName')
+        //     .html(App.Host.players[1].playerName);
+
+        // // Set the Score section on screen to 0 for each player.
+        // $('#player1Score').find('.score').attr('id',App.Host.players[0].mySocketId);
+        // $('#player2Score').find('.score').attr('id',App.Host.players[1].mySocketId);
       }
     },
 
@@ -284,10 +323,10 @@ jQuery(function($){
         // Send the gameId and playerName to the server
         IO.socket.emit('playerJoinGame', data);
 
-        // TODO
+        // TODO: is there any other data I should add ? Don't forget to change the DB model
         // Set the appropriate properties for the current player.
-        // App.myRole = 'Player';
-        // App.Player.myName = data.playerName;
+        App.myRole = 'Player';
+        App.Player.myName = data.playerName;
       },
 
       /**
@@ -295,13 +334,66 @@ jQuery(function($){
        * @param data
        */
       updateWaitingScreen : function(data) {
+        console.log('Update' + IO.socket.socket.sessionid === data.mySocketId);
         if(IO.socket.socket.sessionid === data.mySocketId){
             App.myRole = 'Player';
             App.gameId = data.gameId;
 
+            $('.btnStartClass').html("<div class='shaft-load3'>" +
+              "<div class='shaft1'></div>" +
+              "<div class='shaft2'></div>" +
+              "<div class='shaft3'></div>" +
+              "<div class='shaft4'></div>" +
+              "<div class='shaft5'></div>" +
+              "<div class='shaft6'></div>" +
+              "<div class='shaft7'></div>" +
+              "<div class='shaft8'></div>" +
+              "<div class='shaft9'></div>" +
+              "<div class='shaft10'></div>" +
+              "</div>");
             $('#playerWaitingMessage')
-                .append('<p/>')
-                .text('Joined Game ' + data.gameId + '. Please wait for game to begin.');
+              .append('<p/>')
+              .text('Joined Game ' + data.gameId + '. Please wait for game to begin.');
+        };
+      }
+    },
+
+    /* **************************
+              UTILITY CODE
+       ************************** */
+
+    /**
+     * Display the countdown timer on the Host screen
+     *
+     * @param $el The container element for the countdown timer
+     * @param startTime
+     * @param callback The function to call when the timer ends.
+     */
+    countDown : function($el, startTime, callback) {
+      // Display the starting time on the screen.
+      $el.text(startTime);
+      // I don't have it inside the utility functions
+      // App.doTextFit('#hostBlock');
+
+      console.log('Starting Countdown...');
+
+      // Start a 1 second timer
+      var timer = setInterval(countItDown,1000);
+
+      // Decrement the displayed timer value on each 'tick'
+      function countItDown(){
+        startTime -= 1
+        $el.text(startTime);
+        // I don't have it inside the utility functions
+        // App.doTextFit('#hostBlock');
+
+        if( startTime <= 0 ){
+            // console.log('Countdown Finished.');
+
+            // Stop the timer and do the callback.
+            clearInterval(timer);
+            callback();
+            return;
         }
       }
     }

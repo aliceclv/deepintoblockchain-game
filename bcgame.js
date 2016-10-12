@@ -19,8 +19,8 @@ exports.initGame = function(sio, socket, sdb) {
 
   // // Host Events
   gameSocket.on('hostCreateNewGame', hostCreateNewGame);
-  // gameSocket.on('hostRoomFull', hostPrepareGame);
-  // gameSocket.on('hostCountdownFinished', hostStartGame);
+  gameSocket.on('hostRoomFull', hostPrepareGame);
+  gameSocket.on('hostCountdownFinished', hostStartGame);
   // gameSocket.on('hostNextRound', hostNextRound);
 
   // // Player Events
@@ -47,6 +47,33 @@ function hostCreateNewGame() {
 
     // Join the Room and wait for the players
     this.join(thisGameId.toString());
+};
+
+/*
+ * Two players have joined. Alert the host!
+ * @param gameId The game ID / room ID
+ */
+function hostPrepareGame(gameId) {
+    var sock = this;
+    var data = {
+        mySocketId : sock.id,
+        gameId : gameId
+    };
+    console.log("All Players Present. Preparing game...");
+
+    io.sockets.in(data.gameId).emit('beginNewGame', data);
+};
+
+/*
+ * The Countdown has finished, and the game begins!
+ * @param gameId The game ID / room ID
+ */
+function hostStartGame(gameId) {
+    console.log('Game Started.');
+    // TODO: we don't send word! We send true/false questions
+    // sendWord(0,gameId);
+    // Here is the parameters: wordPoolIndex & gameId, the room identifier
+    // sendQuestions(0,gameId)
 };
 
 
@@ -100,3 +127,26 @@ function playerJoinGame(data) {
         this.emit('error',{message: "This room does not exist."} );
     }
 };
+
+
+/* *************************
+   *                       *
+   *      GAME LOGIC       *
+   *                       *
+   ************************* */
+
+/**
+ * Get a word for the host, and a list of words for the player.
+ *
+ * @param wordPoolIndex
+ * @param gameId The room identifier
+ */
+// TODO: implement my own game logic
+// function sendWord(wordPoolIndex, gameId) {
+//     var data = getWordData(wordPoolIndex);
+//     io.sockets.in(data.gameId).emit('newWordData', data);
+// };
+
+// We don't need to get a word for the host, we need to display color blocks
+// if the color of the team has been chosen!
+//

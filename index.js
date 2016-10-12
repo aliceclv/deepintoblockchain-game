@@ -30,10 +30,10 @@ console.log(db);
 // TODO: Not working!
 db.serialize(function() {
   console.log(!exists);
-  // if(!exists) {
-  //   db.run("CREATE TABLE player (player_name TEXT, player_win INT)");
-  // }
-  db.run("CREATE TABLE player (player_name TEXT, player_win INT)");
+  if(!exists) {
+    db.run("CREATE TABLE player (player_name TEXT, player_win INT)");
+  }
+  // db.run("CREATE TABLE player (player_name TEXT, player_win INT)");
 });
 
 
