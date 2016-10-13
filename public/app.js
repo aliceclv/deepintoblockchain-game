@@ -32,7 +32,7 @@ jQuery(function($){
         IO.socket.on('newGameCreated', IO.onNewGameCreated );
         IO.socket.on('playerJoinedRoom', IO.playerJoinedRoom );
         IO.socket.on('beginNewGame', IO.beginNewGame );
-        // IO.socket.on('newWordData', IO.onNewWordData);
+        IO.socket.on('newWordData', IO.onNewWordData);
         // IO.socket.on('hostCheckAnswer', IO.hostCheckAnswer);
         // IO.socket.on('gameOver', IO.gameOver);
         // IO.socket.on('error', IO.error );
@@ -79,7 +79,32 @@ jQuery(function($){
       // TODO: do it for player as well
       console.log("DONT FORGET TO DO IT FOR PLAYER");
       App[App.myRole].gameCountdown(data);
+    },
+
+    /**
+     * A new word for the round is returned from the server.
+     * @param data{{chainNumber: *, blockNumber: *, word: *, answer: *}}
+     */
+    onNewWordData : function(data) {
+        // Here is the structure of the data:
+        // var wordData = {
+        //   chainNumber: i,
+        //   blockNumber: wordPool[i][0],
+        //   word: wordPool[i][1],
+        //   answer: wordPool[i][2]
+        // };
+
+        // Update the current round || chainNumber
+        App.currentChain = data.chainNumber;
+
+        // Update the current block || When we have to validate a block after
+        App.currentBlock = data.blockNumber;
+
+        // Change the word for the Host and Player
+        // TODO: Do it for the player and for the host? but host has nothing
+        App[App.myRole].newWord(data);
     }
+
   };
 
   var App = {
@@ -103,10 +128,17 @@ jQuery(function($){
     mySocketId: '',
 
     /**
-     * Identifies the current round. Starts at 0 because it corresponds
+     * Identifies the current chain || round. Starts at 0 because it corresponds
      * to the array of word data stored on the server.
      */
-    currentRound: 0,
+    currentChain: 0,
+
+
+    /**
+     * Identifies the current block || where we're going to have to change after 4. Starts at 0 because it corresponds
+     * to the array of word data stored on the server.
+     */
+    currentBlock: 0,
 
     /* *************************************
      *                Setup                *
@@ -269,18 +301,46 @@ jQuery(function($){
             IO.socket.emit('hostCountdownFinished', App.gameId);
         });
 
-        // // Display the players' names on screen
-        // $('#player1Score')
-        //     .find('.playerName')
-        //     .html(App.Host.players[0].playerName);
+        // Display the players' names on screen
+        $('#player1Score')
+            .find('.playerName')
+            .html(App.Host.players[0].playerName);
 
-        // $('#player2Score')
-        //     .find('.playerName')
-        //     .html(App.Host.players[1].playerName);
+        $('#player2Score')
+            .find('.playerName')
+            .html(App.Host.players[1].playerName);
 
-        // // Set the Score section on screen to 0 for each player.
-        // $('#player1Score').find('.score').attr('id',App.Host.players[0].mySocketId);
-        // $('#player2Score').find('.score').attr('id',App.Host.players[1].mySocketId);
+        $('#player3Score')
+            .find('.playerName')
+            .html(App.Host.players[2].playerName);
+
+        $('#player4Score')
+            .find('.playerName')
+            .html(App.Host.players[3].playerName);
+
+        // Set the Score section on screen to 0 for each player.
+        $('#player1Score').find('.score').attr('id',App.Host.players[0].mySocketId);
+        $('#player2Score').find('.score').attr('id',App.Host.players[1].mySocketId);
+        $('#player3Score').find('.score').attr('id',App.Host.players[2].mySocketId);
+        $('#player4Score').find('.score').attr('id',App.Host.players[3].mySocketId);
+      },
+
+      /**
+       * Show the word for the current round on screen.
+       * @param data{{chainNumber: *, blockNumber: *, word: *, answer: *}}
+       */
+      // TODO: I DON'T NEED THAT! but do I need correct answer? or can I put it player side?
+      newWord : function(data) {
+          // I don't need it
+          // Insert the new word into the DOM
+          // $('#hostWord').text(data.word);
+          // App.doTextFit('#hostWord');
+
+          // TODO: I'll keep that here for now
+          // Update the data for the current round (correct answer & current round)
+          App.Host.currentCorrectAnswer = data.answer;
+          App.Host.currentChain = data.chainNumber;
+          App.Host.currentBlock = data.blockNumber;
       }
     },
 
@@ -355,6 +415,40 @@ jQuery(function($){
               .append('<p/>')
               .text('Joined Game ' + data.gameId + '. Please wait for game to begin.');
         };
+      },
+
+      /**
+       * Display 'Get Ready' while the countdown timer ticks down.
+       * @param hostData
+       */
+      gameCountdown : function(hostData) {
+          // Update the hostSocketId of the player (to link them with the host?)
+          App.Player.hostSocketId = hostData.mySocketId;
+          // TODO: Maybe something fancier than just get ready
+          $('#gameArea')
+              .html('<div class="gameOver">Get Ready!</div>');
+      },
+
+      /**
+       * Show the list of words for the current round.
+       * @param data{{chainNumber: *, blockNumber: *, word: *, answer: *}}
+       */
+      newWord : function(data) {
+          // TODO: we need to insert the word and a line below for answer!
+          // HTML SHIT
+
+          var $question = $('<div/>').attr('class','questionAreaWrapper');
+
+          $question.append($('<div/>').attr('class', 'container')
+            .append($('<div/>').attr('class', 'col-xs-12')
+                .append( $('<div/>').attr('id', 'questionArea')
+                    .append($('<label/>').attr('for', 'inputWordAnswer').html(data.word))
+                    .append($('<input/>').attr('id', 'inputWordAnswer').attr('type', 'text'))
+                )
+            )
+          );
+
+          $('#gameArea').html($question);
       }
     },
 

@@ -70,11 +70,10 @@ function hostPrepareGame(gameId) {
  */
 function hostStartGame(gameId) {
     console.log('Game Started.');
-    // TODO: we don't send word! We send true/false questions
-    // sendWord(0,gameId);
-    // Here is the parameters: wordPoolIndex & gameId, the room identifier
-    // sendQuestions(0,gameId)
+    // TODO: we send words
+    sendWordToPlayers(0,gameId);
 };
+
 
 
 /* *****************************
@@ -129,6 +128,7 @@ function playerJoinGame(data) {
 };
 
 
+
 /* *************************
    *                       *
    *      GAME LOGIC       *
@@ -150,3 +150,93 @@ function playerJoinGame(data) {
 // We don't need to get a word for the host, we need to display color blocks
 // if the color of the team has been chosen!
 //
+
+function sendWordToPlayers(wordPoolIndex, gameId) {
+    // Get a word to send
+    // TODO: wordPoolIndex corresponds to the rounds of the game
+    var data = getWordData(wordPoolIndex);
+
+    // Send it to the client through the rooms of Socket.IO
+    // TODO: Was like that before but said it's undefined || Should I make a PR?
+    // io.sockets.in(data.gameId).emit('newWordData', data);
+    io.sockets.in(gameId).emit('newWordData', data);
+};
+
+/**
+ * This function does all the work of getting a new words from the pile
+ * and organizing the data to be sent back to the clients.
+ *
+ * @param i The index of the wordPool.
+ * @returns {{chainNumber: *, blockNumber: *, word: *, answer: *}}
+ */
+function getWordData(i){
+    // // Randomize the order of the available words.
+    // // The first element in the randomized array will be displayed on the host screen.
+    // // The second element will be hidden in a list of decoys as the correct answer
+    // var words = shuffle(wordPool[i].words);
+
+    // // Randomize the order of the decoy words and choose the first 5
+    // var decoys = shuffle(wordPool[i].decoys).slice(0,5);
+
+    // // Pick a random spot in the decoy list to put the correct answer
+    // var rnd = Math.floor(Math.random() * 5);
+    // decoys.splice(rnd, 0, words[1]);
+
+    // // Package the words into a single object.
+    // var wordData = {
+    //     round: i,
+    //     word : words[0],   // Displayed Word
+    //     answer : words[1], // Correct Answer
+    //     list : decoys      // Word list for player (decoys and answer)
+    // };
+
+    // return wordData;
+    var wordData = {
+      chainNumber: i,
+      blockNumber: wordPool[i][0],
+      word: wordPool[i][1],
+      answer: wordPool[i][2]
+    };
+
+    return wordData;
+};
+
+
+/*
+ * Javascript implementation of Fisher-Yates shuffle algorithm
+ * http://stackoverflow.com/questions/2450954/how-to-randomize-a-javascript-array
+ */
+// function shuffle(array) {
+//     var currentIndex = array.length;
+//     var temporaryValue;
+//     var randomIndex;
+
+//     // While there remain elements to shuffle...
+//     while (0 !== currentIndex) {
+
+//         // Pick a remaining element...
+//         randomIndex = Math.floor(Math.random() * currentIndex);
+//         currentIndex -= 1;
+
+//         // And swap it with the current element.
+//         temporaryValue = array[currentIndex];
+//         array[currentIndex] = array[randomIndex];
+//         array[randomIndex] = temporaryValue;
+//     }
+
+//     return array;
+// };
+
+/**
+ * Each element in the array provides data for a single round in the game.
+ *
+ * In each round, two random "words" are chosen as the host word and the correct answer.
+ * Five random "decoys" are chosen to make up the list displayed to the player.
+ * The correct answer is randomly inserted into the list of chosen decoys.
+ *
+ * @type {Array}
+ */
+
+var wordPool = [
+  [1, "hello", "gdkkn"], [1, "cup", "bto"]
+];
