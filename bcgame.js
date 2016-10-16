@@ -1,6 +1,8 @@
 var io;
 var gameSocket;
 var db;
+var colors = ['#E74C3C', '#2185C5', '#FFF6E5', '#7ECEFD'];
+
 /**
  * This function is called by index.js to initialize a new game instance.
  *
@@ -17,15 +19,15 @@ exports.initGame = function(sio, socket, sdb) {
   // //common event
   // gameSocket.on('findLeader',findLeader);
 
-  // // Host Events
+  // Host Events
   gameSocket.on('hostCreateNewGame', hostCreateNewGame);
   gameSocket.on('hostRoomFull', hostPrepareGame);
   gameSocket.on('hostCountdownFinished', hostStartGame);
-  // gameSocket.on('hostNextRound', hostNextRound);
+  gameSocket.on('hostNextChain', hostNextChain);
 
-  // // Player Events
+  // Player Events
   gameSocket.on('playerJoinGame', playerJoinGame);
-  // gameSocket.on('playerAnswer', playerAnswer);
+  gameSocket.on('playerAnswer', playerAnswer);
   // gameSocket.on('playerRestart', playerRestart);
 }
 
@@ -75,6 +77,39 @@ function hostStartGame(gameId) {
 };
 
 
+/**
+ * A player answered correctly. Time for the next word.
+ * @param data { gameId: *, chain: *, block: * }
+ * @param data Sent from the client. Contains the current round and gameId (room)
+ */
+function hostNextChain(data) {
+    // if(data.round < wordPool.length ){
+    //     // Send a new set of words back to the host and players.
+    //     sendWord(data.round, data.gameId);
+    // } else {
+
+    //   if(!data.done)
+    //   {
+    //     //updating players win count
+    //     db.all("SELECT * FROM player WHERE player_name=?",data.winner, function(err, rows) {
+    //     rows.forEach(function (row) {
+    //         win=row.player_win;
+    //         win++;
+    //         console.log(win);
+    //         db.run("UPDATE player SET player_win = ? WHERE player_name = ?", win, data.winner);
+    //         console.log(row.player_name, row.player_win);
+    //     })
+    //     });
+    //     data.done++;
+    //   }
+    //     // If the current round exceeds the number of words, send the 'gameOver' event.
+    //   io.sockets.in(data.gameId).emit('gameOver',data);
+    // }
+
+    // Here there will be the problem with the
+};
+
+
 
 /* *****************************
    *                           *
@@ -86,7 +121,7 @@ function hostStartGame(gameId) {
  * A player clicked the 'START GAME' button.
  * Attempt to connect them to the room that matches
  * the gameId entered by the player.
- * @param data Contains data entered via player's input - playerName and gameId.
+ * @param data Contains data entered via player's input - playerName, playerColor and gameId.
  */
 function playerJoinGame(data) {
     console.log('Player ' + data.playerName + 'attempting to join game: ' + data.gameId );
@@ -99,8 +134,11 @@ function playerJoinGame(data) {
 
     // If the room exists...
     if( room != undefined ){
-        // attach the socket id to the data object.
+        // Attach the socket id to the data object.
         data.mySocketId = sock.id;
+
+        // Attach color to player
+        data.playerColor = colors.splice(Math.floor(Math.random()*colors.length), 1);
 
         // Join the room
         sock.join(data.gameId);
@@ -110,7 +148,7 @@ function playerJoinGame(data) {
                 db.get(stmt, function(err, row){
                     if(err) throw err;
                     if(typeof row == "undefined") {
-                            db.prepare("INSERT INTO player (player_name,player_win) VALUES(?,?)").run(data.playerName,0).finalize();
+                            db.prepare("INSERT INTO player (player_name,player_color,player_win) VALUES(?,?,?)").run(data.playerName,data.playerColor,0).finalize();
                     } else {
                         console.log("row is: ", row);
                     }
@@ -125,6 +163,19 @@ function playerJoinGame(data) {
         // Otherwise, send an error message back to the player.
         this.emit('error',{message: "This room does not exist."} );
     }
+};
+
+
+/**
+ * A player has entered an answer word.
+ * @param data { gameId: *, playerId: *, answer: *, currentBlock: *, currentChain: * }
+ */
+function playerAnswer(data) {
+    // console.log('Player ID: ' + data.playerId + ' answered a question with: ' + data.answer);
+
+    // The player's answer is attached to the data object.
+    // Emit an event with the answer so it can be checked by the 'Host'
+    io.sockets.in(data.gameId).emit('hostCheckAnswer', data);
 };
 
 

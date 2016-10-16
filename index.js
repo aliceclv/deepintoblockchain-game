@@ -31,9 +31,8 @@ console.log(db);
 db.serialize(function() {
   console.log(!exists);
   if(!exists) {
-    db.run("CREATE TABLE player (player_name TEXT, player_win INT)");
+    db.run("CREATE TABLE player (player_name TEXT, player_color TEXT, player_win INT)");
   }
-  // db.run("CREATE TABLE player (player_name TEXT, player_win INT)");
 });
 
 
@@ -59,7 +58,6 @@ io.set('log level',1);
 // Listen for Socket.IO Connections. Once connected, start the game logic.
 io.sockets.on('connection', function (socket) {
     console.log('Client connected');
-    // agx.initGame(io, socket, db);
     bc.initGame(io, socket, db);
 });
 

@@ -10,6 +10,7 @@ Light blue: #7ECEFD */
   color: #FFF6E5;
   height: 100vh;
   text-align: center;
+  padding: 5%;
 }
 
 .buttons {
@@ -40,6 +41,7 @@ Light blue: #7ECEFD */
   color: #FFF6E5;
   height: 100vh;
   text-align: center;
+  padding: 5%;
 }
 
 .info input {
@@ -60,10 +62,45 @@ Light blue: #7ECEFD */
   color: #FFF6E5;
   height: 100vh;
   text-align: center;
+  padding: 5%;
 }
 
 .questionAreaWrapper {
   background-color: #3E454C;
   color: #FFF6E5;
   height: 100vh;
+  padding: 5%;
+  text-align: center;
+}
+
+
+.questionArea {
+  text-transform: uppercase;
+}
+
+.questionArea input {
+  border: none;
+  background-color: inherit;
+  color: #FFF6E5;
+  padding: 5px;
+  border-bottom: 2px dashed;
+/*  border-radius: 5px;
+  border: 2px solid;*/
+}
+
+.questionArea input:focus {
+  outline: 0;
+}
+
+.hostGameWrapper {
+  background-color: #3E454C;
+  color: #FFF6E5;
+  min-height: 100vh;
+  text-align: center;
+  padding: 5%;
+}
+
+.colorBlock {
+  width: 200px;
+  height: 100px;
 }

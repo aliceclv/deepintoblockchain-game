@@ -30,10 +30,10 @@ jQuery(function($){
         IO.socket.on('connected', IO.onConnected );
         // TODO: Room needs to be created before? || We follow the exact same scheme
         IO.socket.on('newGameCreated', IO.onNewGameCreated );
-        IO.socket.on('playerJoinedRoom', IO.playerJoinedRoom );
-        IO.socket.on('beginNewGame', IO.beginNewGame );
+        IO.socket.on('playerJoinedRoom', IO.playerJoinedRoom);
+        IO.socket.on('beginNewGame', IO.beginNewGame);
         IO.socket.on('newWordData', IO.onNewWordData);
-        // IO.socket.on('hostCheckAnswer', IO.hostCheckAnswer);
+        IO.socket.on('hostCheckAnswer', IO.hostCheckAnswer);
         // IO.socket.on('gameOver', IO.gameOver);
         // IO.socket.on('error', IO.error );
         // IO.socket.on('showLeader',IO.showLeader);
@@ -103,6 +103,16 @@ jQuery(function($){
         // Change the word for the Host and Player
         // TODO: Do it for the player and for the host? but host has nothing
         App[App.myRole].newWord(data);
+    },
+
+    /**
+     * A player answered. If this is the host, check the answer.
+     * @param data { gameId: *, playerId: *, answer: *, currentBlock: *, currentChain: * }
+     */
+    hostCheckAnswer : function(data) {
+        if(App.myRole === 'Host') {
+            App.Host.checkAnswer(data);
+        }
     }
 
   };
@@ -170,12 +180,12 @@ jQuery(function($){
 
     bindEvents: function() {
       // Host
-      // Host
       App.$doc.on('click', '#btnCreateGame', App.Host.onCreateClick);
 
       // Player
       App.$doc.on('click', '#btnJoinGame', App.Player.onJoinClick);
       App.$doc.on('click', '#btnStart', App.Player.onPlayerStartClick);
+      App.$doc.on('click', '#btnAnswer', App.Player.onPlayerAnswerClick);
     },
 
     /* *************************************
@@ -278,7 +288,8 @@ jQuery(function($){
 
         // TODO: this is where I need to change for 4
         // If two players have joined, start the game!
-        if (App.Host.numPlayersInRoom === 4) {
+        // TODO: DON'T FORGET TO CHANGE IT LATER
+        if (App.Host.numPlayersInRoom === 2) {
             console.log('Room is full. Almost ready!');
 
             // Let the server know that two players are present.
@@ -318,7 +329,7 @@ jQuery(function($){
             .find('.playerName')
             .html(App.Host.players[3].playerName);
 
-        // Set the Score section on screen to 0 for each player.
+        // Set the Score section on screen to 0 for each player with the socket id
         $('#player1Score').find('.score').attr('id',App.Host.players[0].mySocketId);
         $('#player2Score').find('.score').attr('id',App.Host.players[1].mySocketId);
         $('#player3Score').find('.score').attr('id',App.Host.players[2].mySocketId);
@@ -337,11 +348,80 @@ jQuery(function($){
           // App.doTextFit('#hostWord');
 
           // TODO: I'll keep that here for now
-          // Update the data for the current round (correct answer & current round)
+          // Update the data for the current chain (correct answer & current chain)
           App.Host.currentCorrectAnswer = data.answer;
           App.Host.currentChain = data.chainNumber;
           App.Host.currentBlock = data.blockNumber;
+      },
+
+      /**
+       * Check the answer clicked by a player.
+       * @param data { gameId: *, playerId: *, playerColor: *, answer: *, currentBlock: *, currentChain: * }
+       */
+      checkAnswer : function(data) {
+          // TODO: the score is not stored into the DB?? Nope, just if the player won or not
+          // Verify that the answer clicked is from the current chain.
+          // This prevents a 'late entry' from a player whos screen has not
+          // yet updated to the current round.
+          if (data.currentChain === App.currentChain && data.currentBlock === App.currentBlock){
+
+              // TODO: How to transfer logic from the score to logic from the block?
+              // Get the player's score
+              console.log('PlayerID:' + data.playerId);
+              var $pScore = $('#' + data.playerId);
+
+              // Advance player's score if it is correct
+              if( App.Host.currentCorrectAnswer === data.answer ) {
+
+                  // Add 1 to the player's score
+                  $pScore.text(+$pScore.text() + 1);
+
+                  // Advance the chain
+                  App.currentChain += 1;
+
+                  // Advance the block if it's the fourth chain of the block
+                  // TODO: if it's the fourth one --> Advance the block
+                  // We take the incremented value to have the chain starting at 1
+                  // Should it be the value given by the block?
+                  if ( App.currentChain % 4 === 0 ){
+                      // Advance the block
+                      App.currentBlock += 1;
+
+                      // TODO: Should I do something with the HOST screen ?
+                      // Send a color block ??
+                      // Display a nice color block to host screen
+                      App.Host.displayColorBlock(data.playerColor);
+                  };
+
+                  // Prepare data to send to the server
+                  var data = {
+                      gameId : App.gameId,
+                      chain : App.currentChain,
+                      block : App.currentBlock
+                  };
+
+                  // Notify the server to start the next round.
+                  // IO.socket.emit('hostNextRound',data);
+                  IO.socket.emit('hostNextChain', data);
+
+              } else {
+                  // A wrong answer was submitted, so decrement the player's score.
+                  // $pScore.text( +$pScore.text() - 3 );
+                  // TODO: should display something or bubbling button squizz
+                  // ??
+                  // IO.socket.emit('wrongAnswerGiven', data);
+              }
+          }
+      },
+
+      displayColorBlock : function(playerColor) {
+        // TODO: display a color block
+        var $blockArea = $('#colorBlocks');
+        $blockArea.prepend('<div/>').attr('class', 'colorBlock').css('background-color', playerColor);
+        // ??
+        // $blockArea.
       }
+
     },
 
     /* *****************************
@@ -358,6 +438,13 @@ jQuery(function($){
        */
       myName: '',
 
+
+      /**
+       * The player's default block color
+       */
+
+      myColor: '',
+
       /**
        * Click handler for the 'JOIN' button
        */
@@ -373,7 +460,6 @@ jQuery(function($){
        * and clicked Start.
        */
       onPlayerStartClick: function() {
-        // console.log('Player clicked "Start"');
         // collect data to send to the server
         var data = {
           gameId : +($('#inputGameId').val()),
@@ -390,6 +476,31 @@ jQuery(function($){
       },
 
       /**
+       *  Click handler for the Player hitting a word in the word list.
+       */
+      onPlayerAnswerClick: function() {
+          console.log('Clicked Answer Button');
+
+          var answer = $('#inputWordAnswer').val();
+          console.log('The answer is' + answer);
+
+          // var $btn = $(this);      // the tapped button
+          // var answer = $btn.val(); // The tapped word
+
+          // Send the player info and tapped word to the server so
+          // the host can check the answer.
+          var data = {
+              gameId: App.gameId,
+              playerId: App.mySocketId,
+              playerColor: App.Player.myColor,
+              answer: answer,
+              currentBlock: App.currentBlock,
+              currentChain: App.currentChain
+          }
+          IO.socket.emit('playerAnswer',data);
+      },
+
+      /**
        * Display the waiting screen for player 1
        * @param data
        */
@@ -398,6 +509,8 @@ jQuery(function($){
         if(IO.socket.socket.sessionid === data.mySocketId){
             App.myRole = 'Player';
             App.gameId = data.gameId;
+            App.Player.myColor = data.playerColor;
+            console.log('Color of this player: ' + App.Player.myColor);
 
             $('.btnStartClass').html("<div class='shaft-load3'>" +
               "<div class='shaft1'></div>" +
@@ -443,8 +556,10 @@ jQuery(function($){
             .append($('<div/>').attr('class', 'col-xs-12')
                 .append( $('<div/>').attr('id', 'questionArea')
                     .append($('<label/>').attr('for', 'inputWordAnswer').html(data.word))
+                    .append($('<br/>'))
                     .append($('<input/>').attr('id', 'inputWordAnswer').attr('type', 'text'))
                 )
+                .append($('<button/>').attr('id', 'btnAnswer').html('Check'))
             )
           );
 
