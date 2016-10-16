@@ -68,36 +68,35 @@
     <script id="join-game-template" type="text/template">
       <div class="joinGameWrapper">
         <div class='container'>
-          <div class="col-xs-12">
-            <div class="header">
-              <h1>Who are you? </h1>
+          <div id='joinGameForm'>
+            <div class="col-xs-12">
+              <div class="header">
+                <h1>Who are you? </h1>
+              </div>
+            </div>
+
+            <div class="col-xs-12">
+              <div class="info">
+                <label for="inputPlayerName">Your team:</label>
+                <input id="inputPlayerName" type="text" />
+              </div>
+
+              <div class="info">
+                <label for="inputGameId">Game ID:</label>
+                <input id="inputGameId" type="text"/>
+              </div>
             </div>
           </div>
-
-          <div class="col-xs-12">
-            <div class="info">
-              <label for="inputPlayerName">Your team:</label>
-              <input id="inputPlayerName" type="text" />
-            </div>
-
-            <div class="info">
-              <label for="inputGameId">Game ID:</label>
-              <input id="inputGameId" type="text"/>
-            </div>
-
-            <div class="btnStartClass buttons">
-              <button id="btnStart">Start</button>
-            </div>
-
-            <div id="playerWaitingMessage"></div>
+          <div class="btnStartClass buttons">
+            <button id="btnStart">Start</button>
           </div>
+          <div id="playerWaitingMessage"></div>
         </div>
       </div>
     </script>
 
 
     <!-- This is the 'Host' screen. It displays the color blocks of the blockchain. -->
-    TODO: don't forget to togglecass go away for countDownBlock
     <script id="host-game-template" type="text/template">
       <div class="hostGameWrapper">
         <div id="blockArea">
@@ -124,7 +123,7 @@
           </div>
         </div>
 
-        <div id="playerScores">
+        <div id="playerScores" class="hidden">
           <div id="player1Score" class="playerScore">
             <span class="score">0</span><span class="playerName">Player 1</span>
           </div>
@@ -140,23 +139,13 @@
         </div>
       </div>
     </script>
-<!--     // <div id="wordArea">
-    //     <div id="hostWord">5</div>
-    // </div>
-    // <div id="playerScores">
-    //     <div id="player1Score" class="playerScore">
-    //         <span class="score">0</span><span class="playerName">Player 1</span>
-    //     </div>
-    //     <div id="player2Score" class="playerScore">
-    //         <span class="playerName">Player 2</span><span class="score">0</span>
-    //     </div>
-    // </div> -->
 
 
     <script id="leaderboard-template" type="text/template">
     //     <div id="banner">Leader Board</div>
     //     <hr>
     </script>
+
     <!-- JavaScript Libraries -->
 
     <!-- jQuery! -->

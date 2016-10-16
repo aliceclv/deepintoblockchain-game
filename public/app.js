@@ -298,7 +298,7 @@ jQuery(function($){
 
         // If four players have joined, start the game!
         // TODO: set it back to 4
-        if (App.Host.numPlayersInRoom === 1) {
+        if (App.Host.numPlayersInRoom === 4) {
             console.log('Room is full. Almost ready!');
 
             // Let the server know that two players are present.
@@ -313,7 +313,6 @@ jQuery(function($){
         // TODO
         // Prepare the game screen with new HTML
         App.$gameArea.html(App.$hostGame);
-        // App.doTextFit('#hostWord');
 
         // Begin the on-screen countdown timer
         var $secondsLeft = $('#countDownBlock');
@@ -322,6 +321,7 @@ jQuery(function($){
         });
 
         // Display the players' names on screen
+        $('#playerScores').removeClass('hidden');
         $('#player1Score')
             .find('.playerName')
             .html(App.Host.players[0].playerName);
@@ -596,8 +596,8 @@ jQuery(function($){
             App.myRole = 'Player';
             App.gameId = data.gameId;
             App.Player.myColor = data.playerColor;
-            console.log('Color of this player: ' + App.Player.myColor);
 
+            $('#joinGameForm').fadeOut();
             $('.btnStartClass').html("<div class='shaft-load3'>" +
               "<div class='shaft1'></div>" +
               "<div class='shaft2'></div>" +
@@ -610,9 +610,11 @@ jQuery(function($){
               "<div class='shaft9'></div>" +
               "<div class='shaft10'></div>" +
               "</div>");
+
             $('#playerWaitingMessage')
               .append('<p/>')
-              .text('Joined Game ' + data.gameId + '. Please wait for game to begin.');
+              .text('Almost there... Please wait now for the game to begin.');
+              // .text('Almost there... ' + data.gameId + ' Please wait now for the game to begin.');
         };
       },
 
@@ -629,13 +631,10 @@ jQuery(function($){
       },
 
       /**
-       * Show the list of words for the current round.
+       * Show the word of the current round.
        * @param data{{chainNumber: *, blockNumber: *, word: *, answer: *}}
        */
       newWord : function(data) {
-          // TODO: we need to insert the word and a line below for answer!
-          // HTML SHIT
-
           var $question = $('<div/>').attr('class','questionAreaWrapper');
 
           $question.append($('<div/>').attr('class', 'container')
@@ -645,7 +644,9 @@ jQuery(function($){
                     .append($('<br/>'))
                     .append($('<input/>').attr('id', 'inputWordAnswer').attr('type', 'text'))
                 )
-                .append($('<button/>').attr('id', 'btnAnswer').html('Check'))
+                .append($('<div/>').attr('class', 'buttons')
+                  .append($('<button/>').attr('id', 'btnAnswer').html('Check'))
+                )
             )
           );
 

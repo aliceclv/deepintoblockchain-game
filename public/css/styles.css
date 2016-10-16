@@ -74,11 +74,11 @@ Light blue: #7ECEFD */
 }
 
 
-.questionArea {
+#questionArea {
   text-transform: uppercase;
 }
 
-.questionArea input {
+#questionArea input {
   border: none;
   background-color: inherit;
   color: #FFF6E5;
@@ -88,7 +88,7 @@ Light blue: #7ECEFD */
   border: 2px solid;*/
 }
 
-.questionArea input:focus {
+#questionArea input:focus {
   outline: 0;
 }
 

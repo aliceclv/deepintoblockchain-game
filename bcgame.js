@@ -72,6 +72,7 @@ function hostPrepareGame(gameId) {
  */
 function hostStartGame(gameId) {
     console.log('Game Started.');
+
     // TODO: we send words
     sendWordToPlayers(0,gameId);
 };
