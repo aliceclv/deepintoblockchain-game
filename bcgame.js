@@ -83,30 +83,26 @@ function hostStartGame(gameId) {
  * @param data Sent from the client. Contains the current round and gameId (room)
  */
 function hostNextChain(data) {
-    // if(data.round < wordPool.length ){
-    //     // Send a new set of words back to the host and players.
-    //     sendWord(data.round, data.gameId);
-    // } else {
-
-    //   if(!data.done)
-    //   {
-    //     //updating players win count
-    //     db.all("SELECT * FROM player WHERE player_name=?",data.winner, function(err, rows) {
-    //     rows.forEach(function (row) {
-    //         win=row.player_win;
-    //         win++;
-    //         console.log(win);
-    //         db.run("UPDATE player SET player_win = ? WHERE player_name = ?", win, data.winner);
-    //         console.log(row.player_name, row.player_win);
-    //     })
-    //     });
-    //     data.done++;
-    //   }
-    //     // If the current round exceeds the number of words, send the 'gameOver' event.
-    //   io.sockets.in(data.gameId).emit('gameOver',data);
-    // }
-
-    // Here there will be the problem with the
+    if(data.chain < wordPool.length){
+      // Send a new word back to the players.
+      sendWordToPlayers(data.chain, data.gameId);
+    } else {
+      if(!data.done) {
+        //updating players win count
+        db.all("SELECT * FROM player WHERE player_name=?",data.winner, function(err, rows) {
+            rows.forEach(function (row) {
+                win=row.player_win;
+                win++;
+                console.log(win);
+                db.run("UPDATE player SET player_win = ? WHERE player_name = ?", win, data.winner);
+                console.log(row.player_name, row.player_win);
+            })
+        });
+        data.done++;
+      }
+        // If the current round exceeds the number of words, send the 'gameOver' event.
+      io.sockets.in(data.gameId).emit('gameOver',data);
+    }
 };
 
 
@@ -236,7 +232,8 @@ function getWordData(i){
     // // Package the words into a single object.
     // var wordData = {
     //     round: i,
-    //     word : words[0],   // Displayed Word
+    //     word : words[0],
+    // Displayed Word
     //     answer : words[1], // Correct Answer
     //     list : decoys      // Word list for player (decoys and answer)
     // };
@@ -288,6 +285,57 @@ function getWordData(i){
  * @type {Array}
  */
 
+
 var wordPool = [
-  [1, "hello", "gdkkn"], [1, "cup", "bto"]
+  [1, "block", "aknbj"],
+  [1, "blockchain", "aknbjbgzhm"],
+  [1, "chain", "bgzhm"],
+  [1, "contract", "bnmsqzbs"],
+  [2, "drugs", "cqtfr"],
+  [2, "ethereum", "dsgdqdtl"],
+  [2, "future", "etstqd"],
+  [2, "golem", "fnkdl"]
 ];
+
+// var wordPool = [
+//   [1, "block", "aknbj"],
+//   [1, "blockchain", "aknbjbgzhm"],
+//   [1, "chain", "bgzhm"],
+//   [1, "contract", "bnmsqzbs"],
+//   [2, "drugs", "cqtfr"],
+//   [2, "ethereum", "dsgdqdtl"],
+//   [2, "future", "etstqd"],
+//   [2, "golem", "fnkdl"],
+//   [3, "insurance", "hmrtqzmbd"],
+//   [3, "ledger", "kdcfdq"],
+//   [3, "litecoin", "khsdbnhm"],
+//   [3, "marketplace", "lzqjdsokzbd"],
+//   [4, "organization", "nqfzmhyzshnm"],
+//   [4, "payment system", "ozxldmszrxrsdl"],
+//   [4, "political", "onkhshbzk"],
+//   [4, "proof of work", "oqnneznezvnqj"],
+//   [5, "transactions", "sqzmrzbshnmr"],
+//   [5, "transparency", "sqzmrozqdmbx"],
+//   [5, "trust", "sqtrs"],
+//   [5, "wallet", "vzkkds"],
+//   [6, "api", "bqj"],
+//   [6, "autonomous", "bvupopnpvt"],
+//   [6, "banks", "cbolt"],
+//   [6, "bitcoin", "cjudpjo"],
+//   [7, "crypto-currency", "dszqup.dvssfodz"],
+//   [7, "database", "ebubcbtf"],
+//   [7, "decentralization", "efdfousbmjabujpo"],
+//   [7, "disrupt", "ejtsvqu"],
+//   [8, "government", "hpwfsonfou"],
+//   [8, "guns", "hvot"],
+//   [8, "hash", "ibti"],
+//   [8, "industry", "joevtusz"],
+//   [9, "media", "nfejb"],
+//   [9, "mining", "njojoh"],
+//   [9, "network", "ofuxpsl"],
+//   [9, "openness", "pqfooftt"],
+//   [10, "satoshi nakamoto", "tbuptij!oblbnpup"],
+//   [10, "silkroad", "tjmlspbe"],
+//   [10, "system", "tztufn"],
+//   [10, "technology", "ufdiopmphz"]
+// ];

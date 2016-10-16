@@ -34,7 +34,7 @@ jQuery(function($){
         IO.socket.on('beginNewGame', IO.beginNewGame);
         IO.socket.on('newWordData', IO.onNewWordData);
         IO.socket.on('hostCheckAnswer', IO.hostCheckAnswer);
-        // IO.socket.on('gameOver', IO.gameOver);
+        IO.socket.on('gameOver', IO.gameOver);
         // IO.socket.on('error', IO.error );
         // IO.socket.on('showLeader',IO.showLeader);
     },
@@ -113,6 +113,14 @@ jQuery(function($){
         if(App.myRole === 'Host') {
             App.Host.checkAnswer(data);
         }
+    },
+
+    /**
+     * Let everyone know the game has ended.
+     * @param data
+     */
+    gameOver : function(data) {
+        App[App.myRole].endGame(data);
     }
 
   };
@@ -286,10 +294,8 @@ jQuery(function($){
         // Increment the number of players in the room
         App.Host.numPlayersInRoom += 1;
 
-        // TODO: this is where I need to change for 4
-        // If two players have joined, start the game!
-        // TODO: DON'T FORGET TO CHANGE IT LATER
-        if (App.Host.numPlayersInRoom === 2) {
+        // If four players have joined, start the game!
+        if (App.Host.numPlayersInRoom === 4) {
             console.log('Room is full. Almost ready!');
 
             // Let the server know that two players are present.
@@ -307,7 +313,7 @@ jQuery(function($){
         // App.doTextFit('#hostWord');
 
         // Begin the on-screen countdown timer
-        var $secondsLeft = $('#hostBlock');
+        var $secondsLeft = $('#countDownBlock');
         App.countDown( $secondsLeft, 5, function(){
             IO.socket.emit('hostCountdownFinished', App.gameId);
         });
@@ -420,8 +426,71 @@ jQuery(function($){
         $blockArea.prepend('<div/>').attr('class', 'colorBlock').css('background-color', playerColor);
         // ??
         // $blockArea.
-      }
+      },
 
+      /**
+       * All blocks have played out. End the game.
+       * @param data { gameId: *, chain: *, block: * }
+       */
+      endGame : function(data) {
+          // Get the data for player 1 from the host screen
+          var $p1 = $('#player1Score');
+          var p1Score = +$p1.find('.score').text();
+          var p1Name = $p1.find('.playerName').text();
+
+          // Get the data for player 2 from the host screen
+          var $p2 = $('#player2Score');
+          var p2Score = +$p2.find('.score').text();
+          var p2Name = $p2.find('.playerName').text();
+
+          // Get the data for player 3 from the host screen
+          var $p3 = $('#player3Score');
+          var p3Score = +$p3.find('.score').text();
+          var p3Name = $p3.find('.playerName').text();
+
+          // Get the data for player 4 from the host screen
+          var $p4 = $('#player4Score');
+          var p4Score = +$p4.find('.score').text();
+          var p4Name = $p4.find('.playerName').text();
+
+          // Find the winner based on the scores
+          var players = [p1Name, p2Name, p3Name, p4Name];
+          var scores = [p1Score, p2Score, p3Score, p4Score];
+          var maxScore = Math.max.apply(Math, scores);
+          var indexOfWinner = [];
+          for (var i = 0; i < scores.length; i++) {
+              if(scores[i] === maxScore) {
+                indexOfWinner.push(i);
+              }
+          }
+
+          var tie = false;
+          // Check if there is a tie situation
+          if(indexOfWinner.length > 1) {
+            tie = true;
+          } else {
+            var winner = players[indexOfWinner];
+          }
+
+          // Display the winner (or tie game message)
+          if(tie){
+              $('#hostBlock').text("It's a Tie!");
+          } else {
+              $('#hostBlock').text( winner + ' Wins!!' );
+          }
+          data.winner = winner;
+          if(data.done > 0) {
+
+          } else data.done = 0;
+          //console.log(data);
+          // TODO: Wtf is that?
+          // IO.socket.emit("clientEndGame",data);
+          // Reset game data
+          App.Host.numPlayersInRoom = 0;
+          App.Host.isNewGame = true;
+          IO.socket.emit('hostNextRound',data);
+          // Reset game data
+      },
     },
 
     /* *****************************
