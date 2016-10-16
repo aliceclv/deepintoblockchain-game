@@ -1,14 +1,20 @@
-#countDownBlock {
+#countDownBlock{
+  animation: initial;
 }
 
-.shaft-load3 {
-  width: 100px;
-  height: 100px;
+/* Shaft 11 */
+.shaft-load11 {
+  position: relative;
+  /*width: 100px;
+  height: 100px;*/
+  width: 400px;
+  height: 400px;
 }
-.shaft-load3 > div {
+.shaft-load11 > div {
   background: transparent;
-  border: 4px solid transparent;
-  border-color: transparent transparent transparent #B96CFF;
+  border: 8px solid transparent;
+/*  border-color: #b96cff transparent;*/
+  border-color: #E74C3C transparent;
   -webkit-border-radius: 100%;
   -moz-border-radius: 100%;
   border-radius: 100%;
@@ -25,141 +31,153 @@
   -ms-transform: translate(-50%, -50%) rotate(0);
   -o-transform: translate(-50%, -50%) rotate(0);
   transform: translate(-50%, -50%) rotate(0);
-  -webkit-animation: loading3 2s infinite ease-in-out;
-  -moz-animation: loading3 2s infinite ease-in-out;
-  -o-animation: loading3 2s infinite ease-in-out;
-  animation: loading3 2s infinite ease-in-out;
+  -webkit-animation: loading11 2s infinite ease-in-out;
+  -moz-animation: loading11 2s infinite ease-in-out;
+  -o-animation: loading11 2s infinite ease-in-out;
+  animation: loading11 2s infinite ease-in-out;
 }
-.shaft-load3 .shaft1 {
+.shaft-load11 .shaft1 {
   -webkit-animation-delay: 0.1s;
   -moz-animation-delay: 0.1s;
   -o-animation-delay: 0.1s;
   animation-delay: 0.1s;
-  width: 20px;
-  height: 20px;
+/*  width: 20px;
+  height: 20px;*/
+  width: 80px;
+  height: 80px;
 }
-.shaft-load3 .shaft2 {
+.shaft-load11 .shaft2 {
   -webkit-animation-delay: 0.2s;
   -moz-animation-delay: 0.2s;
   -o-animation-delay: 0.2s;
   animation-delay: 0.2s;
-  width: 25px;
-  height: 25px;
+  width: 100px;
+  height: 100px;
+/*  width: 25px;
+  height: 25px;*/
 }
-.shaft-load3 .shaft3 {
+.shaft-load11 .shaft3 {
   -webkit-animation-delay: 0.3s;
   -moz-animation-delay: 0.3s;
   -o-animation-delay: 0.3s;
   animation-delay: 0.3s;
-  width: 30px;
-  height: 30px;
+/*  width: 35px;
+  height: 35px;*/
+  width: 140px;
+  height: 140px;
 }
-.shaft-load3 .shaft4 {
+.shaft-load11 .shaft4 {
   -webkit-animation-delay: 0.4s;
   -moz-animation-delay: 0.4s;
   -o-animation-delay: 0.4s;
   animation-delay: 0.4s;
-  width: 35px;
-  height: 35px;
+  width: 180px;
+  height: 180px;
+/*  width: 45px;
+  height: 45px;*/
 }
-.shaft-load3 .shaft5 {
+.shaft-load11 .shaft5 {
   -webkit-animation-delay: 0.5s;
   -moz-animation-delay: 0.5s;
   -o-animation-delay: 0.5s;
   animation-delay: 0.5s;
-  width: 40px;
-  height: 40px;
+  width: 220px;
+  height: 220px;
+/*  width: 55px;
+  height: 55px;*/
 }
-.shaft-load3 .shaft6 {
+.shaft-load11 .shaft6 {
   -webkit-animation-delay: 0.6s;
   -moz-animation-delay: 0.6s;
   -o-animation-delay: 0.6s;
   animation-delay: 0.6s;
-  width: 45px;
-  height: 45px;
+  width: 260px;
+  height: 260px;
+/*  width: 65px;
+  height: 65px;*/
 }
-.shaft-load3 .shaft7 {
+.shaft-load11 .shaft7 {
   -webkit-animation-delay: 0.7s;
   -moz-animation-delay: 0.7s;
   -o-animation-delay: 0.7s;
   animation-delay: 0.7s;
-  width: 50px;
-  height: 50px;
+  width: 300px;
+  height: 300px;
+/*  width: 75px;
+  height: 75px;*/
 }
-.shaft-load3 .shaft8 {
+.shaft-load11 .shaft8 {
   -webkit-animation-delay: 0.8s;
   -moz-animation-delay: 0.8s;
   -o-animation-delay: 0.8s;
   animation-delay: 0.8s;
-  width: 55px;
-  height: 55px;
+  width: 320px;
+  height: 320px;
+/*  width: 80px;
+  height: 80px;*/
 }
-.shaft-load3 .shaft9 {
+.shaft-load11 .shaft9 {
   -webkit-animation-delay: 0.9s;
   -moz-animation-delay: 0.9s;
   -o-animation-delay: 0.9s;
   animation-delay: 0.9s;
-  width: 60px;
-  height: 60px;
+  width: 340px;
+  height: 340px;
+/*  width: 85px;
+  height: 85px;*/
 }
-.shaft-load3 .shaft10 {
+.shaft-load11 .shaft10 {
   -webkit-animation-delay: 1s;
   -moz-animation-delay: 1s;
   -o-animation-delay: 1s;
   animation-delay: 1s;
-  width: 65px;
-  height: 65px;
+  width: 360px;
+  height: 360px;
+/*  width: 90px;
+  height: 90px;*/
 }
 
-@-webkit-keyframes loading3 {
+@-webkit-keyframes loading11 {
   50% {
     -webkit-transform: translate(-50%, -50%) rotate(360deg);
     -moz-transform: translate(-50%, -50%) rotate(360deg);
     -ms-transform: translate(-50%, -50%) rotate(360deg);
     -o-transform: translate(-50%, -50%) rotate(360deg);
     transform: translate(-50%, -50%) rotate(360deg);
-    border-color: transparent transparent rgba(86, 215, 198, 0.1) #56D7C6;
-  }
-  75% {
-    border-color: rgba(86, 215, 198, 0.1) transparent transparent #56D7C6;
+/*    border-color: #56d7c6 transparent;*/
+    border-color: #FFF6E5 transparent;
   }
 }
-@-moz-keyframes loading3 {
+@-moz-keyframes loading11 {
   50% {
     -webkit-transform: translate(-50%, -50%) rotate(360deg);
     -moz-transform: translate(-50%, -50%) rotate(360deg);
     -ms-transform: translate(-50%, -50%) rotate(360deg);
     -o-transform: translate(-50%, -50%) rotate(360deg);
     transform: translate(-50%, -50%) rotate(360deg);
-    border-color: transparent transparent rgba(86, 215, 198, 0.1) #56D7C6;
-  }
-  75% {
-    border-color: rgba(86, 215, 198, 0.1) transparent transparent #56D7C6;
+    /*border-color: #56d7c6 transparent;*/
+    border-color: #FFF6E5 transparent;
   }
 }
-@-o-keyframes loading3 {
+@-o-keyframes loading11 {
   50% {
     -webkit-transform: translate(-50%, -50%) rotate(360deg);
     -moz-transform: translate(-50%, -50%) rotate(360deg);
     -ms-transform: translate(-50%, -50%) rotate(360deg);
     -o-transform: translate(-50%, -50%) rotate(360deg);
     transform: translate(-50%, -50%) rotate(360deg);
-    border-color: transparent transparent rgba(86, 215, 198, 0.1) #56D7C6;
-  }
-  75% {
-    border-color: rgba(86, 215, 198, 0.1) transparent transparent #56D7C6;
+    /*border-color: #56d7c6 transparent;*/
+    border-color: #FFF6E5 transparent;
   }
 }
-@keyframes loading3 {
+@keyframes loading11 {
   50% {
     -webkit-transform: translate(-50%, -50%) rotate(360deg);
     -moz-transform: translate(-50%, -50%) rotate(360deg);
     -ms-transform: translate(-50%, -50%) rotate(360deg);
     -o-transform: translate(-50%, -50%) rotate(360deg);
     transform: translate(-50%, -50%) rotate(360deg);
-    border-color: transparent transparent rgba(86, 215, 198, 0.1) #56D7C6;
-  }
-  75% {
-    border-color: rgba(86, 215, 198, 0.1) transparent transparent #56D7C6;
+    /*border-color: #56d7c6 transparent;*/
+    border-color: #FFF6E5 transparent;
   }
 }

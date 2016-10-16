@@ -194,6 +194,8 @@ jQuery(function($){
       App.$doc.on('click', '#btnJoinGame', App.Player.onJoinClick);
       App.$doc.on('click', '#btnStart', App.Player.onPlayerStartClick);
       App.$doc.on('click', '#btnAnswer', App.Player.onPlayerAnswerClick);
+      App.$doc.on('click', '#btnPlayerRestart', App.Player.onPlayerRestart);
+
     },
 
     /* *************************************
@@ -295,7 +297,8 @@ jQuery(function($){
         App.Host.numPlayersInRoom += 1;
 
         // If four players have joined, start the game!
-        if (App.Host.numPlayersInRoom === 4) {
+        // TODO: set it back to 4
+        if (App.Host.numPlayersInRoom === 1) {
             console.log('Room is full. Almost ready!');
 
             // Let the server know that two players are present.
@@ -314,7 +317,7 @@ jQuery(function($){
 
         // Begin the on-screen countdown timer
         var $secondsLeft = $('#countDownBlock');
-        App.countDown( $secondsLeft, 5, function(){
+        App.countDown( $secondsLeft, 15, function(){
             IO.socket.emit('hostCountdownFinished', App.gameId);
         });
 
@@ -570,6 +573,20 @@ jQuery(function($){
       },
 
       /**
+       *  Click handler for the "Start Again" button that appears
+       *  when a game is over.
+       */
+      onPlayerRestart : function() {
+          var data = {
+              gameId : App.gameId,
+              playerName : App.Player.myName
+          }
+          IO.socket.emit('playerRestart',data);
+          App.currentRound = 0;
+          $('#gameArea').html("<h3>Waiting on host to start new game.</h3>");
+      },
+
+      /**
        * Display the waiting screen for player 1
        * @param data
        */
@@ -633,6 +650,21 @@ jQuery(function($){
           );
 
           $('#gameArea').html($question);
+      },
+
+      /**
+       * Show the "Game Over" screen.
+       */
+      endGame : function() {
+          $('#gameArea')
+              .html('<div class="gameOver">Game Over!</div>')
+              .append(
+                  // Create a button to start a new game.
+                  $('<button>Start Again</button>')
+                      .attr('id','btnPlayerRestart')
+                      .addClass('btn')
+                      .addClass('btnGameOver')
+              );
       }
     },
 
@@ -667,6 +699,8 @@ jQuery(function($){
 
         if( startTime <= 0 ){
             // console.log('Countdown Finished.');
+
+            $('#countDownArea').fadeOut();
 
             // Stop the timer and do the callback.
             clearInterval(timer);
