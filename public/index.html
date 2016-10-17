@@ -19,28 +19,31 @@
         <!-- This is where the templates defined below will be used -->
     </div>
 
+    <!-- TODO: develop the feedback feature -->
     <!-- Main Title Screen that appears when the page loads for the first time -->
     <!-- We could also have predefined rooms and when the maximum amount of player is reached, then the game starts -->
     <script id="intro-screen-template" type="text/template">
-      <div class="introScreenWrapper">
+      <div class="introScreenWrapper chained">
         <div class="container">
-          <div class="col-xs-12">
+          <div class="col-xs-12 col-sm-4">
             <div class="header">
               <h1>Deep into blockchain</h1>
             </div>
           </div>
-          <div class="col-xs-12">
-            <div class="buttons">
-              <button id="btnCreateGame">
-                Create a new game
-              </button>
-            </div>
-          </div>
-          <div class="col-xs-12">
-            <div class="buttons">
-              <button id='btnJoinGame'>
-                Join a room
-              </button>
+            <div class="col-xs-12 col-sm-6">
+              <div class='buttonsArea'>
+                <div class="buttons">
+                  <button id="btnCreateGame">
+                    Create a new game
+                  </button>
+                </div>
+                <div class="buttons">
+                  <button id='btnJoinGame'>
+                    Join a room
+                  </button>
+                </div>
+                <h1>Give feedback!</h1>
+              </div>
             </div>
           </div>
         </div>
@@ -68,6 +71,7 @@
     <script id="join-game-template" type="text/template">
       <div class="joinGameWrapper">
         <div class='container'>
+          <div id="playerWaitingMessage"></div>
           <div id='joinGameForm'>
             <div class="col-xs-12">
               <div class="header">
@@ -90,7 +94,6 @@
           <div class="btnStartClass buttons">
             <button id="btnStart">Start</button>
           </div>
-          <div id="playerWaitingMessage"></div>
         </div>
       </div>
     </script>

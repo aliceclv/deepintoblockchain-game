@@ -13,8 +13,25 @@ Light blue: #7ECEFD */
   padding: 5%;
 }
 
+@media screen and (min-width: 768px) {
+  .chained {
+    background-image: url('../images/chains.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position-y: 30%;
+  }
+}
+
+
+
 .buttons {
   margin: 2%;
+}
+
+@media screen and (max-width: 414px) {
+  .buttons button {
+    width: 240px;
+  }
 }
 
 .buttons button {
@@ -24,6 +41,17 @@ Light blue: #7ECEFD */
   border: 2px solid;
   padding: 2%;
   border-radius: 5px;
+  width: 325px;
+}
+
+.buttons button {
+  text-decoration: none;
+  font-size: 32px;
+  background-color: inherit;
+  border: 2px solid;
+  padding: 2%;
+  border-radius: 5px;
+  min-width: 240px;
 }
 
 .buttons button:hover {

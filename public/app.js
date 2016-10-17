@@ -288,7 +288,7 @@ jQuery(function($){
         }
         // TODO: not working
         // Update host screen
-        $('#playersWaiting').append('<p>Player ' + data.playerName + ' joined the game.</p>');
+        $('#playersWaiting').append('<h1>Player ' + data.playerName + ' joined the game.</h1>');
 
         // Store the new player's data on the Host.
         App.Host.players.push(data);
