@@ -403,7 +403,7 @@ jQuery(function($){
                   App.currentChain += 1;
 
                   // Advance the block if it's the fourth chain of the block
-                  if ( App.currentChain % 4 === 0 ){
+                  if ( App.currentChain % 2 === 0 ){
                       // Advance the block
                       App.currentBlock += 1;
 
