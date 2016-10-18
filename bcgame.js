@@ -137,6 +137,7 @@ function playerJoinGame(data) {
 
         // Attach color to player
         data.playerColor = colors.splice(Math.floor(Math.random()*colors.length), 1);
+        console.log('Color: '+ data.playerColor);
 
         // Join the room
         sock.join(data.gameId);
@@ -146,7 +147,7 @@ function playerJoinGame(data) {
                 db.get(stmt, function(err, row){
                     if(err) throw err;
                     if(typeof row == "undefined") {
-                            db.prepare("INSERT INTO player (player_name,player_color,player_win) VALUES(?,?,?)").run(data.playerName,data.playerColor,0).finalize();
+                        db.prepare("INSERT INTO player (player_name,player_color,player_win) VALUES(?,?,?)").run(data.playerName, data.playerColor, 0).finalize();
                     } else {
                         console.log("row is: ", row);
                     }

@@ -319,7 +319,6 @@ jQuery(function($){
        * Show the countdown screen
        */
       gameCountdown : function() {
-        // TODO
         // Prepare the game screen with new HTML
         App.$gameArea.html(App.$hostGame);
 
@@ -329,6 +328,8 @@ jQuery(function($){
             IO.socket.emit('hostCountdownFinished', App.gameId);
         });
 
+
+        // TODO: should be able not to display this part
         $('#player1Score')
             .find('.playerName')
             .html(App.Host.players[0].playerName);
@@ -345,6 +346,22 @@ jQuery(function($){
             .find('.playerName')
             .html(App.Host.players[3].playerName);
 
+        $('#player1BlockScore')
+            .find('.playerName')
+            .html(App.Host.players[0].playerName);
+
+        $('#player2BlockScore')
+            .find('.playerName')
+            .html(App.Host.players[1].playerName);
+
+        $('#player3BlockScore')
+            .find('.playerName')
+            .html(App.Host.players[2].playerName);
+
+        $('#player4BlockScore')
+            .find('.playerName')
+            .html(App.Host.players[3].playerName);
+
         // Set the Score section on screen to 0 for each player with the socket id
         $('#player1Score').find('.score').attr('id',App.Host.players[0].mySocketId);
         $('#player2Score').find('.score').attr('id',App.Host.players[1].mySocketId);
@@ -356,9 +373,6 @@ jQuery(function($){
         $('#player2BlockScore').find('.score').attr('id',App.Host.players[1].mySocketId + 'Block');
         $('#player3BlockScore').find('.score').attr('id',App.Host.players[2].mySocketId + 'Block');
         $('#player4BlockScore').find('.score').attr('id',App.Host.players[3].mySocketId + 'Block');
-
-        // Display the players' names on screen
-        $('#playerScores').removeClass('hidden');
       },
 
       /**
@@ -445,11 +459,11 @@ jQuery(function($){
       },
 
       displayColorBlock : function(playerColor) {
-        // TODO: display a color block
+        var color = playerColor;
         var $blockArea = $('#colorBlocks');
-        $blockArea.prepend('<div/>').attr('class', 'colorBlock').css('background-color', playerColor);
-        // ??
-        // $blockArea.
+        var $divColored = $("<div class='colorBlock' style='background-color:" + color + ";'></div>");
+
+        $divColored.hide().prependTo($blockArea).fadeIn('slow');
       },
 
       /**

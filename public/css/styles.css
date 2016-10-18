@@ -138,8 +138,10 @@ Light blue: #7ECEFD */
 }
 
 .colorBlock {
-  width: 200px;
+  width: 400px;
   height: 100px;
+  margin: 5px auto;
+  border-radius: 5px;
 }
 
 .getReady {
@@ -148,4 +150,8 @@ Light blue: #7ECEFD */
   min-height: 100vh;
   text-align: center;
   padding: 5%;
+}
+
+#playerScores {
+  display: none;
 }
