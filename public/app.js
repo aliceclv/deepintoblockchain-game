@@ -375,7 +375,7 @@ jQuery(function($){
        */
       newWord : function(data) {
           // Update the data for the current chain (correct answer & current chain)
-          App.Host.currentCorrectAnswer = data.answer;
+          App.Host.currentCorrectAnswer = data.answer.toLowerCase();
           App.Host.currentChain = data.chainNumber;
           App.Host.currentBlock = data.blockNumber;
       },
