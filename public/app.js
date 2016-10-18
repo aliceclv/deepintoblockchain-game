@@ -37,6 +37,8 @@ jQuery(function($){
         IO.socket.on('gameOver', IO.gameOver);
         // IO.socket.on('error', IO.error );
         // IO.socket.on('showLeader',IO.showLeader);
+
+        IO.socket.on('playerWrongAnswer', IO.onWrongAnswer);
     },
 
     /**
@@ -113,6 +115,13 @@ jQuery(function($){
         if(App.myRole === 'Host') {
             App.Host.checkAnswer(data);
         }
+    },
+
+    /**
+     * A player answered. But it's the wrong answer.
+     */
+    onWrongAnswer : function() {
+      App.Player.onWrongAnswer();
     },
 
     /**
@@ -320,8 +329,6 @@ jQuery(function($){
             IO.socket.emit('hostCountdownFinished', App.gameId);
         });
 
-        // Display the players' names on screen
-        $('#playerScores').removeClass('hidden');
         $('#player1Score')
             .find('.playerName')
             .html(App.Host.players[0].playerName);
@@ -343,6 +350,15 @@ jQuery(function($){
         $('#player2Score').find('.score').attr('id',App.Host.players[1].mySocketId);
         $('#player3Score').find('.score').attr('id',App.Host.players[2].mySocketId);
         $('#player4Score').find('.score').attr('id',App.Host.players[3].mySocketId);
+
+        // Set the Score section on screen to 0 for each player with the socket id
+        $('#player1BlockScore').find('.score').attr('id',App.Host.players[0].mySocketId + 'Block');
+        $('#player2BlockScore').find('.score').attr('id',App.Host.players[1].mySocketId + 'Block');
+        $('#player3BlockScore').find('.score').attr('id',App.Host.players[2].mySocketId + 'Block');
+        $('#player4BlockScore').find('.score').attr('id',App.Host.players[3].mySocketId + 'Block');
+
+        // Display the players' names on screen
+        $('#playerScores').removeClass('hidden');
       },
 
       /**
@@ -376,8 +392,8 @@ jQuery(function($){
 
               // TODO: How to transfer logic from the score to logic from the block?
               // Get the player's score
-              console.log('PlayerID:' + data.playerId);
               var $pScore = $('#' + data.playerId);
+              var $pBlockScore = $('#' + data.playerId + 'Block');
 
               // Advance player's score if it is correct
               if( App.Host.currentCorrectAnswer === data.answer ) {
@@ -388,6 +404,7 @@ jQuery(function($){
                   // Advance the chain
                   App.currentChain += 1;
 
+                  // TODO: it should be score per block and not the last word given
                   // Advance the block if it's the fourth chain of the block
                   // TODO: if it's the fourth one --> Advance the block
                   // We take the incremented value to have the chain starting at 1
@@ -396,10 +413,18 @@ jQuery(function($){
                       // Advance the block
                       App.currentBlock += 1;
 
-                      // TODO: Should I do something with the HOST screen ?
-                      // Send a color block ??
+                      // Add 1 to the player's blockScore
+                      $pBlockScore.text(+$pBlockScore.text() + 1);
+
                       // Display a nice color block to host screen
                       App.Host.displayColorBlock(data.playerColor);
+
+                      // Reset the chain scores to O
+                      // Set the Score section on screen to 0 for each player with the socket id
+                      $('#player1Score').find('.score').text('0');
+                      $('#player2Score').find('.score').text('0');
+                      $('#player3Score').find('.score').text('0');
+                      $('#player4Score').find('.score').text('0');
                   };
 
                   // Prepare data to send to the server
@@ -414,11 +439,7 @@ jQuery(function($){
                   IO.socket.emit('hostNextChain', data);
 
               } else {
-                  // A wrong answer was submitted, so decrement the player's score.
-                  // $pScore.text( +$pScore.text() - 3 );
-                  // TODO: should display something or bubbling button squizz
-                  // ??
-                  // IO.socket.emit('wrongAnswerGiven', data);
+                  IO.socket.emit('playerWrongAnswer', data.playerId);
               }
           }
       },
@@ -437,22 +458,22 @@ jQuery(function($){
        */
       endGame : function(data) {
           // Get the data for player 1 from the host screen
-          var $p1 = $('#player1Score');
+          var $p1 = $('#player1BlockScore');
           var p1Score = +$p1.find('.score').text();
           var p1Name = $p1.find('.playerName').text();
 
           // Get the data for player 2 from the host screen
-          var $p2 = $('#player2Score');
+          var $p2 = $('#player2BlockScore');
           var p2Score = +$p2.find('.score').text();
           var p2Name = $p2.find('.playerName').text();
 
           // Get the data for player 3 from the host screen
-          var $p3 = $('#player3Score');
+          var $p3 = $('#player3BlockScore');
           var p3Score = +$p3.find('.score').text();
           var p3Name = $p3.find('.playerName').text();
 
           // Get the data for player 4 from the host screen
-          var $p4 = $('#player4Score');
+          var $p4 = $('#player4BlockScore');
           var p4Score = +$p4.find('.score').text();
           var p4Name = $p4.find('.playerName').text();
 
@@ -573,6 +594,14 @@ jQuery(function($){
       },
 
       /**
+       *  Button is bouncing when wrong answer given.
+       */
+      onWrongAnswer : function() {
+        $('#btnAnswer').effect('bounce', 'slow');
+      },
+
+
+      /**
        *  Click handler for the "Start Again" button that appears
        *  when a game is over.
        */
@@ -627,7 +656,19 @@ jQuery(function($){
           App.Player.hostSocketId = hostData.mySocketId;
           // TODO: Maybe something fancier than just get ready
           $('#gameArea')
-              .html('<div class="gameOver">Get Ready!</div>');
+              .html('<div class="getReady"><h1>Get Ready!</h1></div>' +
+                "<div class='shaft-load3'>"   +
+                "<div class='shaft1'></div>"  +
+                "<div class='shaft2'></div>"  +
+                "<div class='shaft3'></div>"  +
+                "<div class='shaft4'></div>"  +
+                "<div class='shaft5'></div>"  +
+                "<div class='shaft6'></div>"  +
+                "<div class='shaft7'></div>"  +
+                "<div class='shaft8'></div>"  +
+                "<div class='shaft9'></div>"  +
+                "<div class='shaft10'></div>" +
+                "</div>");
       },
 
       /**
@@ -638,16 +679,19 @@ jQuery(function($){
           var $question = $('<div/>').attr('class','questionAreaWrapper');
 
           $question.append($('<div/>').attr('class', 'container')
-            .append($('<div/>').attr('class', 'col-xs-12')
-                .append( $('<div/>').attr('id', 'questionArea')
-                    .append($('<label/>').attr('for', 'inputWordAnswer').html(data.word))
-                    .append($('<br/>'))
-                    .append($('<input/>').attr('id', 'inputWordAnswer').attr('type', 'text'))
-                )
-                .append($('<div/>').attr('class', 'buttons')
-                  .append($('<button/>').attr('id', 'btnAnswer').html('Check'))
-                )
-            )
+              .append( $('<div/>').attr('id', 'questionArea')
+                  .append($('<div/>').attr('class', 'col-xs-6 col-xs-offset-4')
+                      .append($('<label/>').attr('for', 'inputWordAnswer').html(data.word))
+                  )
+                  .append($('<div/>').attr('class', 'col-xs-6 col-xs-offset-4')
+                      .append($('<input/>').attr('id', 'inputWordAnswer').attr('type', 'text'))
+                  )
+                  .append($('<div/>').attr('class', 'col-xs-6 col-xs-offset-4')
+                      .append($('<div/>').attr('class', 'buttons')
+                        .append($('<button/>').attr('id', 'btnAnswer').html('Check'))
+                      )
+                  )
+              )
           );
 
           $('#gameArea').html($question);

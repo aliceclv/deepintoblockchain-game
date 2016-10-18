@@ -22,8 +22,6 @@ Light blue: #7ECEFD */
   }
 }
 
-
-
 .buttons {
   margin: 2%;
 }
@@ -98,22 +96,33 @@ Light blue: #7ECEFD */
   color: #FFF6E5;
   height: 100vh;
   padding: 5%;
-  text-align: center;
 }
 
 
 #questionArea {
   text-transform: uppercase;
+  font-size: 40px;
+}
+
+@media screen and (min-width: 768px) {
+  #questionArea {
+    font-size: 70px;
+  }
 }
 
 #questionArea input {
   border: none;
   background-color: inherit;
-  color: #FFF6E5;
   padding: 5px;
-  border-bottom: 2px dashed;
-/*  border-radius: 5px;
-  border: 2px solid;*/
+  display: inline-block;
+  margin: 0 auto;
+}
+
+#questionArea label {
+  background-color: inherit;
+  padding: 5px;
+  display: inline-block;
+  margin: 0 auto;
 }
 
 #questionArea input:focus {
@@ -131,4 +140,12 @@ Light blue: #7ECEFD */
 .colorBlock {
   width: 200px;
   height: 100px;
+}
+
+.getReady {
+  background-color: #3E454C;
+  color: #FFF6E5;
+  min-height: 100vh;
+  text-align: center;
+  padding: 5%;
 }

@@ -28,6 +28,7 @@ exports.initGame = function(sio, socket, sdb) {
   // Player Events
   gameSocket.on('playerJoinGame', playerJoinGame);
   gameSocket.on('playerAnswer', playerAnswer);
+  gameSocket.on('playerWrongAnswer', playerWrongAnswer);
   // gameSocket.on('playerRestart', playerRestart);
 }
 
@@ -174,6 +175,13 @@ function playerAnswer(data) {
     // Emit an event with the answer so it can be checked by the 'Host'
     io.sockets.in(data.gameId).emit('hostCheckAnswer', data);
 };
+
+/**
+ * A player has given a wrong answer. The button is going to shake.
+ */
+function playerWrongAnswer(playerId) {
+  io.sockets.socket(playerId).emit('playerWrongAnswer');
+}
 
 
 
