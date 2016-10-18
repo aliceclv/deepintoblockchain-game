@@ -17,6 +17,8 @@ var bc = require('./bcgame');
 var file ="mydb.db";
 var exists = fs.existsSync(file);
 
+console.log(exists);
+
 if(!exists) {
   console.log("Creating DB file.");
   fs.openSync(file, "w");
