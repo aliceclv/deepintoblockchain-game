@@ -296,16 +296,21 @@ function getWordData(i){
  */
 
 
-var wordPool = [
-  [1, "block", "aknbj"],
-  [1, "blockchain", "aknbjbgzhm"],
-  [1, "chain", "bgzhm"],
-  [1, "contract", "bnmsqzbs"],
-  [2, "drugs", "cqtfr"],
-  [2, "ethereum", "dsgdqdtl"],
-  [2, "future", "etstqd"],
-  [2, "golem", "fnkdl"]
-];
+ var wordPool = [
+   [1, "block", "aknbj"]
+ ];
+
+
+// var wordPool = [
+//   [1, "block", "aknbj"],
+//   [1, "blockchain", "aknbjbgzhm"],
+//   [1, "chain", "bgzhm"],
+//   [1, "contract", "bnmsqzbs"],
+//   [2, "drugs", "cqtfr"],
+//   [2, "ethereum", "dsgdqdtl"],
+//   [2, "future", "etstqd"],
+//   [2, "golem", "fnkdl"]
+// ];
 
 // var wordPool = [
 //   [1, "block", "aknbj"],

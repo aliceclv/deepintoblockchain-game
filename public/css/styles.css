@@ -155,3 +155,11 @@ Light blue: #7ECEFD */
 #playerScores {
   display: none;
 }
+
+.gameOver {
+  background-color: #3E454C;
+  color: #FFF6E5;
+  height: 100vh;
+  text-align: center;
+  padding: 5%;
+}

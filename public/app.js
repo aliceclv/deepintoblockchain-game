@@ -716,13 +716,17 @@ jQuery(function($){
        */
       endGame : function() {
           $('#gameArea')
-              .html('<div class="gameOver">Game Over!</div>')
-              .append(
-                  // Create a button to start a new game.
-                  $('<button>Start Again</button>')
-                      .attr('id','btnPlayerRestart')
-                      .addClass('btn')
-                      .addClass('btnGameOver')
+              .html($('<div/>').attr('class', 'gameOver')
+                  .append($('<h1/>').text('Game Over!'))
+                  .append($('<div/>').attr('class', 'buttons')
+                      .append(
+                          // Create a button to start a new game.
+                          $('<button>Start Again</button>')
+                              .attr('id','btnPlayerRestart')
+                              .addClass('btn')
+                              .addClass('btnGameOver')
+                      )
+                  )
               );
       }
     },
