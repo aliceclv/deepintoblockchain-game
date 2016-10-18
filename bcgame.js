@@ -2,6 +2,7 @@ var io;
 var gameSocket;
 var db;
 var colors = ['#E74C3C', '#2185C5', '#FFF6E5', '#7ECEFD'];
+// green red blue yellow
 
 /**
  * This function is called by index.js to initialize a new game instance.
@@ -137,6 +138,7 @@ function playerJoinGame(data) {
 
         // Attach color to player
         data.playerColor = colors.splice(Math.floor(Math.random()*colors.length), 1);
+        console.log('Y-a-t-il des couleurs: ' + colors);
         console.log('Color: '+ data.playerColor);
         console.log('Code to get color: ' + colors.splice(Math.floor(Math.random()*colors.length), 1));
 
