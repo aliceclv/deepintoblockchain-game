@@ -238,7 +238,30 @@ function getWordData(i){
  */
 
 
-var wordPool = [
+ var wordPool = [
+    [1, "blockchain", "aknbjbgzhm"],
+    [1, "contract", "bnmsqzbs"],
+    [2, "ethereum", "dsgdqdtl"],
+    [2, "future", "etstqd"],
+    [3, "ledger", "kdcfdq"],
+    [3, "litecoin", "khsdbnhm"],
+    [4, "organization", "nqfzmhyzshnm"],
+    [4, "political", "onkhshbzk"],
+    [5, "transactions", "sqzmrzbshnmr"],
+    [5, "transparency", "sqzmrozqdmbx"],
+    [6, "autonomous", "bvupopnpvt"],
+    [6, "bitcoin", "cjudpjo"],
+    [7, "crypto-currency", "dszqup.dvssfodz"],
+    [7, "database", "ebubcbtf"],
+    [8, "government", "hpwfsonfou"],
+    [8, "hash", "ibti"],
+    [9, "mining", "njojoh"],
+    [9, "openness", "pqfooftt"],
+    [10, "satoshi nakamoto", "tbuptij!oblbnpup"],
+    [10, "silkroad", "tjmlspbe"]
+ ];
+
+var wordPoolLong = [
   [1, "block", "aknbj"],
   [1, "blockchain", "aknbjbgzhm"],
   [1, "chain", "bgzhm"],
