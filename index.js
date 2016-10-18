@@ -13,7 +13,6 @@ var fs = require('fs');
 var bc = require('./bcgame');
 
 // Creating server if not exists
-// TODO: Something is wrong here with the DB
 var file ="mydb.db";
 var exists = fs.existsSync(file);
 
@@ -28,8 +27,6 @@ var sqlite3 = require("sqlite3").verbose();
 var db = new sqlite3.Database(file);
 console.log(db);
 
-// TODO: what's my db schema?
-// TODO: Not working!
 db.serialize(function() {
   console.log(!exists);
   if(!exists) {

@@ -28,7 +28,6 @@ jQuery(function($){
      */
     bindEvents : function() {
         IO.socket.on('connected', IO.onConnected );
-        // TODO: Room needs to be created before? || We follow the exact same scheme
         IO.socket.on('newGameCreated', IO.onNewGameCreated );
         IO.socket.on('playerJoinedRoom', IO.playerJoinedRoom);
         IO.socket.on('beginNewGame', IO.beginNewGame);
@@ -78,8 +77,6 @@ jQuery(function($){
      * @param data
      */
     beginNewGame : function(data) {
-      // TODO: do it for player as well
-      console.log("DONT FORGET TO DO IT FOR PLAYER");
       App[App.myRole].gameCountdown(data);
     },
 
@@ -102,8 +99,7 @@ jQuery(function($){
         // Update the current block || When we have to validate a block after
         App.currentBlock = data.blockNumber;
 
-        // Change the word for the Host and Player
-        // TODO: Do it for the player and for the host? but host has nothing
+        // Change the word for the Player
         App[App.myRole].newWord(data);
     },
 
@@ -291,12 +287,11 @@ jQuery(function($){
        */
       updateWaitingScreen: function(data) {
         // If this is a restarted game, show the screen.
-        console.log(App.Host.isNewGame);
         if ( App.Host.isNewGame ) {
             App.Host.displayNewGameScreen();
         }
-        // TODO: not working
-        // Update host screen
+
+        // Update the host screen
         $('#playersWaiting').append('<h1>Player ' + data.playerName + ' joined the game.</h1>');
 
         // Store the new player's data on the Host.
@@ -306,9 +301,8 @@ jQuery(function($){
         App.Host.numPlayersInRoom += 1;
 
         // If four players have joined, start the game!
-        // TODO: set it back to 4
         if (App.Host.numPlayersInRoom === 4) {
-            console.log('Room is full. Almost ready!');
+            // console.log('Room is full. Almost ready!');
 
             // Let the server know that two players are present.
             IO.socket.emit('hostRoomFull', App.gameId);
@@ -318,7 +312,7 @@ jQuery(function($){
       /**
        * Show the countdown screen
        */
-      gameCountdown : function() {
+      gameCountdown : function(data) {
         // Prepare the game screen with new HTML
         App.$gameArea.html(App.$hostGame);
 
@@ -329,7 +323,7 @@ jQuery(function($){
         });
 
 
-        // TODO: should be able not to display this part
+        // TODO: find a way not to display this part
         $('#player1Score')
             .find('.playerName')
             .html(App.Host.players[0].playerName);
@@ -379,14 +373,7 @@ jQuery(function($){
        * Show the word for the current round on screen.
        * @param data{{chainNumber: *, blockNumber: *, word: *, answer: *}}
        */
-      // TODO: I DON'T NEED THAT! but do I need correct answer? or can I put it player side?
       newWord : function(data) {
-          // I don't need it
-          // Insert the new word into the DOM
-          // $('#hostWord').text(data.word);
-          // App.doTextFit('#hostWord');
-
-          // TODO: I'll keep that here for now
           // Update the data for the current chain (correct answer & current chain)
           App.Host.currentCorrectAnswer = data.answer;
           App.Host.currentChain = data.chainNumber;
@@ -398,13 +385,10 @@ jQuery(function($){
        * @param data { gameId: *, playerId: *, playerColor: *, answer: *, currentBlock: *, currentChain: * }
        */
       checkAnswer : function(data) {
-          // TODO: the score is not stored into the DB?? Nope, just if the player won or not
           // Verify that the answer clicked is from the current chain.
           // This prevents a 'late entry' from a player whos screen has not
           // yet updated to the current round.
           if (data.currentChain === App.currentChain && data.currentBlock === App.currentBlock){
-
-              // TODO: How to transfer logic from the score to logic from the block?
               // Get the player's score
               var $pScore = $('#' + data.playerId);
               var $pBlockScore = $('#' + data.playerId + 'Block');
@@ -418,11 +402,7 @@ jQuery(function($){
                   // Advance the chain
                   App.currentChain += 1;
 
-                  // TODO: it should be score per block and not the last word given
                   // Advance the block if it's the fourth chain of the block
-                  // TODO: if it's the fourth one --> Advance the block
-                  // We take the incremented value to have the chain starting at 1
-                  // Should it be the value given by the block?
                   if ( App.currentChain % 4 === 0 ){
                       // Advance the block
                       App.currentBlock += 1;
@@ -449,7 +429,6 @@ jQuery(function($){
                   };
 
                   // Notify the server to start the next round.
-                  // IO.socket.emit('hostNextRound',data);
                   IO.socket.emit('hostNextChain', data);
 
               } else {
@@ -512,21 +491,22 @@ jQuery(function($){
 
           // Display the winner (or tie game message)
           if(tie){
-              $('#hostBlock').text("It's a Tie!");
+              $('#hostBlock').append($('<h1/>').text("It's a Tie!"));
           } else {
-              $('#hostBlock').text( winner + ' Wins!!' );
+              $('#hostBlock').append($('<h1/>').text( winner + ' wins this challenge!' ));
           }
           data.winner = winner;
           if(data.done > 0) {
 
           } else data.done = 0;
-          //console.log(data);
+
           // TODO: Wtf is that?
           // IO.socket.emit("clientEndGame",data);
+
           // Reset game data
           App.Host.numPlayersInRoom = 0;
           App.Host.isNewGame = true;
-          IO.socket.emit('hostNextRound',data);
+          IO.socket.emit('hostNextChain',data);
           // Reset game data
       },
     },
@@ -576,7 +556,6 @@ jQuery(function($){
         // Send the gameId and playerName to the server
         IO.socket.emit('playerJoinGame', data);
 
-        // TODO: is there any other data I should add ? Don't forget to change the DB model
         // Set the appropriate properties for the current player.
         App.myRole = 'Player';
         App.Player.myName = data.playerName;
@@ -586,15 +565,10 @@ jQuery(function($){
        *  Click handler for the Player hitting a word in the word list.
        */
       onPlayerAnswerClick: function() {
-          console.log('Clicked Answer Button');
-
           var answer = $('#inputWordAnswer').val();
           console.log('The answer is' + answer);
 
-          // var $btn = $(this);      // the tapped button
-          // var answer = $btn.val(); // The tapped word
-
-          // Send the player info and tapped word to the server so
+          // Send the player info and typed word to the server so
           // the host can check the answer.
           var data = {
               gameId: App.gameId,
@@ -668,9 +642,8 @@ jQuery(function($){
       gameCountdown : function(hostData) {
           // Update the hostSocketId of the player (to link them with the host?)
           App.Player.hostSocketId = hostData.mySocketId;
-          // TODO: Maybe something fancier than just get ready
           $('#gameArea')
-              .html('<div class="getReady"><h1>Get Ready!</h1></div>' +
+              .html('<div class="getReady"><h1>Get Ready for the block!</h1></div>' +
                 "<div class='shaft-load3'>"   +
                 "<div class='shaft1'></div>"  +
                 "<div class='shaft2'></div>"  +

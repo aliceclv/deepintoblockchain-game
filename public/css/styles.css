@@ -163,3 +163,7 @@ Light blue: #7ECEFD */
   text-align: center;
   padding: 5%;
 }
+
+.bigDisplay {
+  font-size: 40px;
+}
