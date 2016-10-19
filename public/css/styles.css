@@ -167,3 +167,12 @@ Light blue: #7ECEFD */
 .bigDisplay {
   font-size: 40px;
 }
+
+.buttonsArea a {
+  color: #FFF6E5;
+  text-decoration: none;
+}
+
+.buttonsArea a:hover {
+  color: rgba(255, 246, 229, 0.6);
+}

@@ -248,7 +248,6 @@ jQuery(function($){
        * Handler for the "Start" button on the Title Screen.
        */
       onCreateClick: function () {
-        console.log('Clicked "Create A Game"');
         IO.socket.emit('hostCreateNewGame');
       },
 
