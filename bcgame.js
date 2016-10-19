@@ -1,7 +1,7 @@
 var io;
 var gameSocket;
 var db;
-var colors = ['#79BD8F', '#E74C3C', '#2185C5', '#FFD34E'];
+var colors = ['#79BD8F', '#E74C3C', '#2185C5', '#FFD34E', '#79BD8F', '#E74C3C', '#2185C5', '#FFD34E', '#79BD8F', '#E74C3C', '#2185C5', '#FFD34E', '#79BD8F', '#E74C3C', '#2185C5', '#FFD34E'];
 // green red blue yellow
 
 /**
