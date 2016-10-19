@@ -282,7 +282,7 @@ jQuery(function($){
 
       /**
        * Update the Host screen when the first player joins
-       * @param data{{playerName: string}}
+       * @param data{{playerName: string, playerColor: string}}
        */
       updateWaitingScreen: function(data) {
         // If this is a restarted game, show the screen.
@@ -291,7 +291,7 @@ jQuery(function($){
         }
 
         // Update the host screen
-        $('#playersWaiting').append('<h1>Player ' + data.playerName + ' joined the game.</h1>');
+        $('#playersWaiting').append('<h1 style="color:' + data.playerColor + ';">Player ' + data.playerName + ' joined the game.</h1>');
 
         // Store the new player's data on the Host.
         App.Host.players.push(data);
@@ -577,25 +577,28 @@ jQuery(function($){
             var winner = players[indexOfWinner];
           }
 
-          // Display the winner (or tie game message)
-          if(tie){
-              $('#hostBlock').append($('<h1/>').text("It's a Tie!"));
-          } else {
-              $('#hostBlock').append($('<h1/>').text( winner + ' wins this challenge!' ));
-          }
           data.winner = winner;
-          if(data.done > 0) {
+          if(data.done>0)
+          {
 
-          } else data.done = 0;
-
+          }
+          else {
+            data.done=0;
+            IO.socket.emit('hostNextChain',data);
+            // Display the winner (or tie game message)
+            if(tie){
+                $('#hostBlock').append($('<h1/>').text("It's a Tie!"));
+            } else {
+                $('#hostBlock').append($('<h1/>').text( winner + ' wins this challenge!' ));
+            }
+          }
           // TODO: Wtf is that?
           // IO.socket.emit("clientEndGame",data);
 
           // Reset game data
           App.Host.numPlayersInRoom = 0;
           App.Host.isNewGame = true;
-          IO.socket.emit('hostNextChain',data);
-          // Reset game data
+
       },
     },
 

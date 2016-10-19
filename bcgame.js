@@ -1,7 +1,7 @@
 var io;
 var gameSocket;
 var db;
-var colors = ['#E74C3C', '#2185C5', '#FFF6E5', '#7ECEFD'];
+var colors = ['#79BD8F', '#E74C3C', '#2185C5', '#FFD34E'];
 // green red blue yellow
 
 /**
@@ -88,7 +88,7 @@ function hostNextChain(data) {
       // Send a new word back to the players.
       sendWordToPlayers(data.chain, data.gameId);
     } else {
-      if(!data.done) {
+      if(!data.done){
         //updating players win count
         db.all("SELECT * FROM player WHERE player_name=?",data.winner, function(err, rows) {
             rows.forEach(function (row) {
@@ -104,7 +104,7 @@ function hostNextChain(data) {
         // If the current round exceeds the number of words, send the 'gameOver' event.
       io.sockets.in(data.gameId).emit('gameOver',data);
     }
-};
+}
 
 
 
@@ -135,8 +135,9 @@ function playerJoinGame(data) {
         data.mySocketId = sock.id;
 
         // Attach color to player
-        data.playerColor = colors.splice(Math.floor(Math.random()*colors.length), 1);
-        // console.log('Code to get color: ' + colors.splice(Math.floor(Math.random()*colors.length), 1));
+        // TODO: Put it back in a random way after
+        // data.playerColor = colors.splice(Math.floor(Math.random()*colors.length), 1);
+        data.playerColor = colors.shift();
 
         // Join the room
         sock.join(data.gameId);
@@ -233,29 +234,30 @@ function getWordData(i){
  * * @type {Array}
  */
 
+ var wordPool = [[1, "blockchain", "aknbjbgzhm"]];
 
- var wordPool = [
-    [1, "blockchain", "aknbjbgzhm"],
-    [1, "contract", "bnmsqzbs"],
-    [2, "ethereum", "dsgdqdtl"],
-    [2, "future", "etstqd"],
-    [3, "ledger", "kdcfdq"],
-    [3, "litecoin", "khsdbnhm"],
-    [4, "organization", "nqfzmhyzshnm"],
-    [4, "political", "onkhshbzk"],
-    [5, "transactions", "sqzmrzbshnmr"],
-    [5, "transparency", "sqzmrozqdmbx"],
-    [6, "autonomous", "bvupopnpvt"],
-    [6, "bitcoin", "cjudpjo"],
-    [7, "crypto-currency", "dszqup.dvssfodz"],
-    [7, "database", "ebubcbtf"],
-    [8, "government", "hpwfsonfou"],
-    [8, "hash", "ibti"],
-    [9, "mining", "njojoh"],
-    [9, "openness", "pqfooftt"],
-    [10, "satoshi nakamoto", "tbuptij!oblbnpup"],
-    [10, "silkroad", "tjmlspbe"]
- ];
+ // var wordPool = [
+ //    [1, "blockchain", "aknbjbgzhm"],
+ //    [1, "contract", "bnmsqzbs"],
+ //    [2, "ethereum", "dsgdqdtl"],
+ //    [2, "future", "etstqd"],
+ //    [3, "ledger", "kdcfdq"],
+ //    [3, "litecoin", "khsdbnhm"],
+ //    [4, "organization", "nqfzmhyzshnm"],
+ //    [4, "political", "onkhshbzk"],
+ //    [5, "transactions", "sqzmrzbshnmr"],
+ //    [5, "transparency", "sqzmrozqdmbx"],
+ //    [6, "autonomous", "bvupopnpvt"],
+ //    [6, "bitcoin", "cjudpjo"],
+ //    [7, "crypto-currency", "dszqup-dvssfodz"],
+ //    [7, "database", "ebubcbtf"],
+ //    [8, "government", "hpwfsonfou"],
+ //    [8, "hash", "ibti"],
+ //    [9, "mining", "njojoh"],
+ //    [9, "openness", "pqfooftt"],
+ //    [10, "satoshi nakamoto", "tbuptij oblbnpup"],
+ //    [10, "silkroad", "tjmlspbe"]
+ // ];
 
 var wordPoolLong = [
   [1, "block", "aknbj"],
@@ -282,7 +284,7 @@ var wordPoolLong = [
   [6, "autonomous", "bvupopnpvt"],
   [6, "banks", "cbolt"],
   [6, "bitcoin", "cjudpjo"],
-  [7, "crypto-currency", "dszqup.dvssfodz"],
+  [7, "crypto-currency", "dszqup-dvssfodz"],
   [7, "database", "ebubcbtf"],
   [7, "decentralization", "efdfousbmjabujpo"],
   [7, "disrupt", "ejtsvqu"],
@@ -294,7 +296,7 @@ var wordPoolLong = [
   [9, "mining", "njojoh"],
   [9, "network", "ofuxpsl"],
   [9, "openness", "pqfooftt"],
-  [10, "satoshi nakamoto", "tbuptij!oblbnpup"],
+  [10, "satoshi nakamoto", "tbuptij oblbnpup"],
   [10, "silkroad", "tjmlspbe"],
   [10, "system", "tztufn"],
   [10, "technology", "ufdiopmphz"]
