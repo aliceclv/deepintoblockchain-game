@@ -380,6 +380,111 @@ jQuery(function($){
           App.Host.currentBlock = data.blockNumber;
       },
 
+      // /**
+      //  * TODO: NOT WORKING
+      //  * Check the answer clicked by a player.
+      //  * @param data { gameId: *, playerId: *, playerColor: *, answer: *, currentBlock: *, currentChain: * }
+      //  */
+      // checkAnswer : function(data) {
+      //     // Verify that the answer clicked is from the current chain.
+      //     // This prevents a 'late entry' from a player whos screen has not
+      //     // yet updated to the current round.
+      //     if (data.currentChain === App.currentChain && data.currentBlock === App.currentBlock){
+      //         // Get the player's score
+      //         var $pScore = $('#' + data.playerId);
+      //         // var $pBlockScore = $('#' + data.playerId + 'Block');
+
+      //         // Advance player's score if it is correct
+      //         if( App.Host.currentCorrectAnswer === data.answer ) {
+
+      //             // Add 1 to the player's score
+      //             $pScore.text(+$pScore.text() + 1);
+
+      //             // Advance the chain
+      //             App.currentChain += 1;
+
+      //             // Advance the block if it's the second chain of the block
+      //             if ( App.currentChain % 2 === 0 ){
+      //                 // Advance the block
+      //                 App.currentBlock += 1;
+
+      //                 // TODO: find a way to increment block score
+      //                 // Add 1 to the player's blockScore of the highest player's score for the round
+      //                 // Get the data for player 1 from the host screen
+      //                 var $p1 = $('#player1Score');
+      //                 var p1Score = +$p1.find('.score').text();
+
+      //                 // Get the data for player 2 from the host screen
+      //                 var $p2 = $('#player2Score');
+      //                 var p2Score = +$p2.find('.score').text();
+
+      //                 // Get the data for player 3 from the host screen
+      //                 var $p3 = $('#player3Score');
+      //                 var p3Score = +$p3.find('.score').text();
+
+      //                 // Get the data for player 4 from the host screen
+      //                 var $p4 = $('#player4Score');
+      //                 var p4Score = +$p4.find('.score').text();
+
+      //                 // Find the winner of the block round based on the scores
+      //                 var divPlayers = [$p1, $p2, $p3, $p4];
+      //                 var scores = [p1Score, p2Score, p3Score, p4Score];
+      //                 var maxScore = Math.max.apply(Math, scores);
+      //                 var indexOfWinner = [];
+      //                 for (var i = 0; i < scores.length; i++) {
+      //                     if(scores[i] === maxScore) {
+      //                       indexOfWinner.push(i);
+      //                     }
+      //                 }
+
+      //                 var tie = false;
+      //                 // Check if there is a tie situation
+      //                 if(indexOfWinner.length > 1) {
+      //                   tie = true;
+
+      //                   // Take a random players amoung the winners
+      //                   var blockWinners = [];
+      //                   for (var i = 0; i < indexOfWinner; i++) {
+      //                     blockWinners.push(divPlayers[i]);
+      //                   }
+      //                   var blockWinner = blockWinners.splice(Math.floor(Math.random()*blockWinners.length), 1);
+      //                 } else {
+      //                   var blockWinner = divPlayers[indexOfWinner];
+      //                 }
+
+      //                 // Find the actual score of the winner of the block
+      //                 var winnerScore = +$blockWinner.find('.score').text();
+      //                 $blockWinner.text(+$pBlockScore.text() + 1);
+
+
+      //                 // Display a nice color block to host screen
+      //                 App.Host.displayColorBlock(data.playerColor);
+
+      //                 // Reset the chain scores to O
+      //                 // Set the Score section on screen to 0 for each player with the socket id
+      //                 $('#player1Score').find('.score').text('0');
+      //                 $('#player2Score').find('.score').text('0');
+      //                 $('#player3Score').find('.score').text('0');
+      //                 $('#player4Score').find('.score').text('0');
+      //             };
+
+      //             // Prepare data to send to the server
+      //             var data = {
+      //                 gameId : App.gameId,
+      //                 chain : App.currentChain,
+      //                 block : App.currentBlock
+      //             };
+
+      //             // Notify the server to start the next round.
+      //             IO.socket.emit('hostNextChain', data);
+
+      //         } else {
+      //             IO.socket.emit('playerWrongAnswer', data.playerId);
+      //         }
+      //     }
+      // },
+
+
       /**
        * Check the answer clicked by a player.
        * @param data { gameId: *, playerId: *, playerColor: *, answer: *, currentBlock: *, currentChain: * }
@@ -388,38 +493,22 @@ jQuery(function($){
           // Verify that the answer clicked is from the current chain.
           // This prevents a 'late entry' from a player whos screen has not
           // yet updated to the current round.
-          if (data.currentChain === App.currentChain && data.currentBlock === App.currentBlock){
-              // Get the player's score
-              var $pScore = $('#' + data.playerId);
+          if (data.currentChain === App.currentChain){
+              // Get the player's score (from the chain)
+              // var $pScore = $('#' + data.playerId);
               var $pBlockScore = $('#' + data.playerId + 'Block');
 
               // Advance player's score if it is correct
               if( App.Host.currentCorrectAnswer === data.answer ) {
 
                   // Add 1 to the player's score
-                  $pScore.text(+$pScore.text() + 1);
+                  $pBlockScore.text(+$pBlockScore.text() + 1);
 
                   // Advance the chain
                   App.currentChain += 1;
 
-                  // Advance the block if it's the fourth chain of the block
-                  if ( App.currentChain % 2 === 0 ){
-                      // Advance the block
-                      App.currentBlock += 1;
-
-                      // Add 1 to the player's blockScore
-                      $pBlockScore.text(+$pBlockScore.text() + 1);
-
-                      // Display a nice color block to host screen
-                      App.Host.displayColorBlock(data.playerColor);
-
-                      // Reset the chain scores to O
-                      // Set the Score section on screen to 0 for each player with the socket id
-                      $('#player1Score').find('.score').text('0');
-                      $('#player2Score').find('.score').text('0');
-                      $('#player3Score').find('.score').text('0');
-                      $('#player4Score').find('.score').text('0');
-                  };
+                  // Display a nice color block to host screen
+                  App.Host.displayColorBlock(data.playerColor);
 
                   // Prepare data to send to the server
                   var data = {
